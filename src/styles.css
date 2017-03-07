@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+/*
+TODO: The following deeppurple-amber.css is a temporarily chosen theme.
+      We need to choose or build our theme.
+      https://material.angular.io/guide/theming
+*/
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
