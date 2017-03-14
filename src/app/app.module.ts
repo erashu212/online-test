@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
+import { ProblemComponent } from './problem/problem.component';
+import { TestService } from './test.service';
 import 'hammerjs';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ProblemComponent
   ],
   imports: [
     BrowserModule,
@@ -16,7 +19,7 @@ import 'hammerjs';
     HttpModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [TestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
