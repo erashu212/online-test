@@ -14,13 +14,19 @@ import { Converter } from "showdown/dist/showdown";
 
 import { IInterviewPanel } from './interview-panel.interfaces';
 
+import 'brace/theme/chrome';
+import 'brace/mode/toml';
+
 declare var showdown: any;
 
 @Component({
   selector: 'interview-panel',
   template: `
     <ace-editor 
-    [autoUpdateContent]="true"
+    [autoUpdateContent] = "true"
+    [mode] = "'toml'"
+    [theme] = "'chrome'"
+
     (textChanged)="parseTOML($event);"
     #editor style="height:250px;"
     ></ace-editor>
@@ -48,19 +54,6 @@ export class InterviewPanelComponent {
   ) { }
 
   ngAfterViewInit() {
-
-    this.editor.getEditor().setOptions({
-      enableBasicAutocompletion: true
-    });
-
-    this.editor.getEditor().commands.addCommand({
-      name: "showOtherCompletions",
-      bindKey: "Ctrl-.",
-      exec: function (editor) {
-
-      }
-    })
-
     this.converter = new Converter();
   }
 
