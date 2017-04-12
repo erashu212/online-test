@@ -1,7 +1,7 @@
 {
   "name": "online-interview-app",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
