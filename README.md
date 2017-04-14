@@ -5,5 +5,7 @@ Developed by Ashutosh Singh and Kibeom Kim.
 Kibeom Kim holds the copyright.
 
 [![Build Status](https://travis-ci.org/m19g/online-test.svg?branch=master)](https://travis-ci.org/m19g/online-test)
+[![dependencies Status](https://david-dm.org/m19g/online-test/status.svg)](https://david-dm.org/m19g/online-test)
+[![devDependencies Status](https://david-dm.org/m19g/online-test/dev-status.svg)](https://david-dm.org/m19g/online-test?type=dev)
 
 # OnlineInterviewApp
