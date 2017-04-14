@@ -4,4 +4,6 @@ Developed by Ashutosh Singh and Kibeom Kim.
 
 Kibeom Kim holds the copyright.
 
+[![Build Status](https://travis-ci.org/m19g/online-test.svg?branch=master)](https://travis-ci.org/m19g/online-test)
+
 # OnlineInterviewApp
