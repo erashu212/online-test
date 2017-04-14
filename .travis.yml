@@ -11,6 +11,7 @@ before_script:
 
 script:
   - npm run build.prod
+  - ng lint
 
 notifications:
   email:
