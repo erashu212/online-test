@@ -18,7 +18,7 @@ import 'brace/mode/toml';
 declare var showdown: any;
 
 @Component({
-  selector: 'interview-panel',
+  selector: 'app-interview-panel',
   template: `
     <ace-editor 
     [autoUpdateContent] = "true"
@@ -39,7 +39,7 @@ export class InterviewPanelComponent {
   data: IInterviewPanel.InterviewTest;
 
   @ViewChild('editor') editor;
-  text: string = "";
+  text = '';
 
   constructor(
     private dialog: MdDialog
@@ -50,7 +50,7 @@ export class InterviewPanelComponent {
       this.data = <IInterviewPanel.InterviewTest>(parse(term));
 
     } catch (error) {
-      //alert('Not a valid format!')
+      // alert('Not a valid format!')
     }
   }
 }

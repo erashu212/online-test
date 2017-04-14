@@ -1,20 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import * as io from 'socket.io-client';
-import { Converter } from "showdown/dist/showdown";
+import { Converter } from 'showdown/dist/showdown';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   converter: Converter;
 
   private socketServer: any;
   private question: any;
-  private uId: string = '70f0a48011cf4df2ad74482accf8ed90';
+  private uId = '70f0a48011cf4df2ad74482accf8ed90';
 
   constructor(public sanitizer: DomSanitizer) { }
 
@@ -34,7 +34,7 @@ export class AppComponent {
       this.question = Object.assign({}, this.question, {
         timeRemaining: data
       });
-    })
+    });
   }
 
   getNextQuestion() {
@@ -42,13 +42,13 @@ export class AppComponent {
   }
 
   displayInTimeFormat(totalSeconds: number) {
-    let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
 
-    return `${this.pad(minutes)}:${this.pad(seconds)}`
+    return `${this.pad(minutes)}:${this.pad(seconds)}`;
   }
 
   private pad(n) {
-    return (n < 10) ? ("0" + n) : n;
+    return (n < 10) ? ('0' + n) : n;
   }
 }
