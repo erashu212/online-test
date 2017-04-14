@@ -15,8 +15,8 @@ module.exports = class SessionDAO {
                   + "question_master.question, "
                   + "question_master.time_limit "
                   + "FROM session "
-                + "INNER JOIN question_master ON session.question_id = question_master.question_id "
-                + "WHERE session.set_id = '" + setId +"'";
+                  + "INNER JOIN question_master ON session.question_id = question_master.question_id "
+                  + "WHERE session.set_id = '" + setId +"'";
 
       DBConfig.getDBInstance()
       .all(sql, (err, rows) => {

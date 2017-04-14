@@ -9,7 +9,7 @@ const _ = require('lodash');
 
 let questionForUser;
 
-const TIMER_INTERVAL = 10;
+const TIMER_INTERVAL = 1;
 
 module.exports = {
   emitter: socketEmitter,
@@ -37,6 +37,11 @@ module.exports = {
 
       uid = sId;
       // });
+
+      // get next question
+      client.on('nextQuestion', (sId) => {
+        getNextQuestion(io, sId);
+      })
 
       client.on('disconnect', () => {
         users_connected.splice(users_connected.indexOf(uid), 1);
@@ -82,14 +87,14 @@ function emitCurrentQuestionToUser(io, promise) {
 
       io.sockets.emit('getQuestion', questionForUser);
 
-      startTimer(client, sid, questionForUser);
+      startTimer(io, sid, questionForUser);
     }
   })
 }
 
 function getNextQuestion(io, sId) {
   QuestionController.get(sId).then(res => {
-    let filteredQuestion = res.problems.filter(q => q != questionForUser);
+    let filteredQuestion = res.problems.filter(q => q.questionId != questionForUser.questionId);
 
     let index = getRandomQuestionIndex(filteredQuestion.length);
 
@@ -97,7 +102,7 @@ function getNextQuestion(io, sId) {
 
     io.sockets.emit('getQuestion', questionForUser);
 
-    startTimer(client, sId, question);
+    startTimer(io, sId, question);
 
     return SessionController.save(res.sId, question);
 
@@ -110,18 +115,17 @@ function startTimer(io, setId, question, offset = TIMER_INTERVAL) {
     SessionController.remove(setId);
 
     question = Object.assign({}, question, {
-      timeRemaining: Math.floor((Math.ceil(question.timeRemaining * 60) - offset) / 60)
+      timeRemaining: question.timeRemaining - offset
     });
 
     // temp code
     if (question.timeRemaining == 0) {
       clearInterval(interval);
-      getNextQuestion(client, setId);
     }
 
     SessionController.save(setId, question);
 
-    io.sockets.emit('getQuestion', question)
+    io.sockets.emit('getQuestionTimer', question.timeRemaining)
 
   }, TIMER_INTERVAL * 1000);
 }

@@ -10,31 +10,45 @@ import { Converter } from "showdown/dist/showdown";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
   converter: Converter;
 
   private socketServer: any;
   private question: any;
+  private uId: string = '70f0a48011cf4df2ad74482accf8ed90';
 
-  constructor(public sanitizer: DomSanitizer) {}
+  constructor(public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.converter = new Converter();
-    
-    this.socketServer = io.connect('http://localhost:4200', {query: 'id=70f0a48011cf4df2ad74482accf8ed90'});
+
+    this.socketServer = io.connect('http://localhost:4200', { query: `id=${this.uId}` });
 
     // register user for questions
     // this.socketServer.emit('register', '70f0a48011cf4df2ad74482accf8ed90');
 
     this.socketServer.on('getQuestion', (data) => {
       this.question = data;
+    });
+
+    this.socketServer.on('getQuestionTimer', (data) => {
+      this.question = Object.assign({}, this.question, {
+        timeRemaining: data
+      });
     })
   }
 
-  displayInTimeFormat(time: number) {
-    let mins = Math.trunc(time / 60);
-    let hrs = time % 60;
+  getNextQuestion() {
+    this.socketServer.emit('nextQuestion', `${this.uId}`);
+  }
 
-    return `${hrs}:${mins}`
+  displayInTimeFormat(totalSeconds: number) {
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+
+    return `${this.pad(minutes)}:${this.pad(seconds)}`
+  }
+
+  private pad(n) {
+    return (n < 10) ? ("0" + n) : n;
   }
 }
