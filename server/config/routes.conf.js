@@ -1,7 +1,6 @@
 "use strict";
 
 const bodyParser = require('body-parser');
-const contentLength = require('express-content-length-validator');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -11,13 +10,14 @@ const cors = require('cors');
 module.exports = class RouteConfig {
   static init(application) {
 
+    application.use(express.static(process.cwd() + '/dist'));
     application.use(bodyParser.urlencoded({ extended: true }));
     application.use(bodyParser.json());
 
     application.use(cookieParser());
 
     application.use(session({
-      secret: 'fifipetshopapi',
+      secret: 'onlineinterview',
       resave: true,
       saveUninitialized: true
     }));
@@ -26,8 +26,6 @@ module.exports = class RouteConfig {
       credentials: true,
       origin: true
     }));
-
-    application.use(morgan('dev'));
-    application.use(contentLength.validateMax({ max: 999 }));
+    
   }
 }

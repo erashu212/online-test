@@ -5,12 +5,10 @@ import {
   EventEmitter,
   ViewChild
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { MdDialog } from '@angular/material';
 
 import { parse } from 'toml';
-import { Converter } from "showdown/dist/showdown";
 
 import { IInterviewPanel } from './interview-panel.interfaces';
 
@@ -32,30 +30,20 @@ declare var showdown: any;
     ></ace-editor>
 
     <div *ngFor="let quest of data?.problem; let idx = index;">
-      <b>Ques {{idx + 1}}.</b><markdown>
-        <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(quest?.question))"
-        ></div>
-        <label>Time limit:</label> {{quest?.time_limit}}
-      </markdown>
+      <b>Ques {{idx + 1}}.</b>
     </div>
   `
 })
 export class InterviewPanelComponent {
 
   data: IInterviewPanel.InterviewTest;
-  converter: Converter;
 
   @ViewChild('editor') editor;
   text: string = "";
 
   constructor(
-    public sanitizer: DomSanitizer,
     private dialog: MdDialog
   ) { }
-
-  ngAfterViewInit() {
-    this.converter = new Converter();
-  }
 
   parseTOML(term: string) {
     try {

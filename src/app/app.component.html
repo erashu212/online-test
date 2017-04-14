@@ -1,2 +1,13 @@
+<md-card>
+  <md-card-title>
+    Allotted In Min -: {{displayInTimeFormat(question?.timeAllotted)}}
+  </md-card-title>
+  <md-card-title>
+    Remaining Time In Min -: {{displayInTimeFormat(question?.timeRemaining)}}
+  </md-card-title>
 
-<interview-panel></interview-panel>
+  <md-card-content>
+     <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(question?.question))">
+     </div>
+  </md-card-content>
+</md-card>
