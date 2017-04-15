@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import * as io from 'socket.io-client';
 import { Converter } from 'showdown/dist/showdown';
@@ -14,9 +13,8 @@ export class AppComponent implements OnInit {
 
   private socketServer: any;
   private question: any;
+  private questionHtml: String;
   private uId = '70f0a48011cf4df2ad74482accf8ed90';
-
-  constructor(public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.converter = new Converter();
@@ -28,6 +26,7 @@ export class AppComponent implements OnInit {
 
     this.socketServer.on('getQuestion', (data) => {
       this.question = data;
+      this.questionHtml = this.converter.makeHtml(data.question);
     });
 
     this.socketServer.on('getQuestionTimer', (data) => {

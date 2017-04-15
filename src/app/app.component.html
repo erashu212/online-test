@@ -1,12 +1,12 @@
 <md-card>
   <md-card-title>
-    <label style="text-align: left;"> Time Limit -: {{displayInTimeFormat(question?.timeAllotted)}}</label>
+    <label style="text-align: left;"> Time Limit : {{displayInTimeFormat(question?.timeAllotted)}}</label>
 
-    <label style="float: right;">Time Remaining -: {{displayInTimeFormat(question?.timeRemaining)}}</label>
+    <label style="float: right;">Time Remaining : {{displayInTimeFormat(question?.timeRemaining)}}</label>
   </md-card-title>
 
   <md-card-content>
-     <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(question?.question))">
+     <div [innerHTML]=questionHtml>
      </div>
      <button md-raised-button color="primary" *ngIf="question?.timeRemaining == 0" (click)="getNextQuestion($event)">Next</button>
   </md-card-content>
