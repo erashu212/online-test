@@ -4,7 +4,7 @@
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build.prod && node --debug-brk ./server/index",
+    "start": "npm run build.prod && node ./server/index",
     "build": "ng build",
     "build.prod": "npm run build --prod --aot && npm run precache",
     "test": "ng test",

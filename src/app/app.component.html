@@ -1,4 +1,5 @@
-<md-card>
+<md-progress-spinner color="primary" *ngIf="isConnecting"></md-progress-spinner>
+<md-card *ngIf="!isConnecting && isConnected">
   <md-card-title>
     <label style="text-align: left;"> Time Limit : {{displayInTimeFormat(question?.timeAllotted)}}</label>
 
