@@ -9,9 +9,11 @@ import { Converter } from 'showdown/dist/showdown';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  converter: Converter;
+  isConnected = false;
+  isConnecting = false;
 
   private socketServer: any;
+  private converter: Converter;
   private question: any;
   private questionHtml: String;
   private uId = '70f0a48011cf4df2ad74482accf8ed90';
@@ -19,7 +21,22 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.converter = new Converter();
 
-    this.socketServer = io.connect('http://localhost:4200', { query: `id=${this.uId}` });
+    this.socketServer = io.connect('http://localhost:4200', {
+      query: `id=${this.uId}`,
+      reconnection: true
+    });
+
+    this.socketServer.on('connect', () => {
+      this.isConnected = true;
+      this.isConnecting = false;
+    });
+
+    // tell socket.io to never give up :)
+    this.socketServer.on('error', () => {
+      this.isConnected = false;
+      this.isConnecting = true;
+      this.socketServer.socket.reconnect();
+    });
 
     // register user for questions
     // this.socketServer.emit('register', '70f0a48011cf4df2ad74482accf8ed90');
