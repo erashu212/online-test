@@ -13,6 +13,10 @@
     "precache": "sw-precache --verbose --config=sw-precache-config.js"
   },
   "private": true,
+  "//": [
+    "MANUAL_UPDATE: Update the following dependent packages.",
+    "npm-check -u"
+  ],
   "dependencies": {
     "@angular/animations": "^4.0.1",
     "@angular/common": "^4.0.0",
