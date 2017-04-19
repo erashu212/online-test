@@ -1,136 +1,144 @@
-const EventEmitter = require('events').EventEmitter;
-const socketEmitter = new EventEmitter();
+"use strict";
 
-const QuestionController = require('../api/question/controller');
-const SessionController = require('../api/session/controller');
-const CacheManager = require('../common/cache/cache');
+const TIMER_INTERVAL_MS = 1000;
 
-const _ = require('lodash');
-
-let questionForUser;
-
-const TIMER_INTERVAL = 1;
-
-module.exports = {
-  emitter: socketEmitter,
-  socket: (io) => {
-    let users = [],
-      users_connected = [],
-      questionForUser = null,
-      uid = null;
-
-    io.on('connection', (client) => {
-      let sId = client.handshake.query.id;
-      // client.on('register', (sId) => {
-
-      if (users_connected.indexOf(sId) < 0) {
-        users_connected.push(sId);
-      }
-
-      // check for new user
-      if (users.indexOf(sId) < 0) {
-        users.push(sId);
-        emitFreshQuestionToUser(io, QuestionController.get(sId));
-      } else {
-        emitCurrentQuestionToUser(io, SessionController.getCurrentStatus(sId));
-      }
-
-      uid = sId;
-      // });
-
-      // get next question
-      client.on('nextQuestion', (sId) => {
-        getNextQuestion(io, sId);
-      })
-
-      client.on('disconnect', () => {
-        users_connected.splice(users_connected.indexOf(uid), 1);
-
-        setTimeout(() => {
-          if(users_connected.indexOf(uid) < 0) {
-            users.splice(users.indexOf(uid), 1);
-
-            // removes user history
-            SessionController.remove(uid);
-            questionForUser = null;
-          }
-        }, 5000)
-      })
-
-    });
-
-    return io;
+class Problem {
+  constructor() {
+    this.question = null;
+    this.timeLimitSec = null;
+    Object.seal(this);
   }
 }
 
-function emitFreshQuestionToUser(io, promise) {
-  promise.then(res => {
-    let index = getRandomQuestionIndex(res.total);
-
-    let question = questionForUser = res.problems[index];
-
-    startTimer(io, res.setId, questionForUser);
-    io.sockets.emit('getQuestion', questionForUser);
-
-    return SessionController.save(res.setId, question);
-  })
+class Session {
+  constructor() {
+    this.problems = [];
+    this.problemStartedTime = null;
+    this.problemIndex = null;
+    this.isTestFinished = false;
+    Object.seal(this);
+  }
 }
 
-function emitCurrentQuestionToUser(io, promise) {
-  promise.then(res => {
+function getDummySession() {
+  let session = new Session();
 
-    if (!!res) {
-      let sid = res.setId;
-      delete res.setId;
+  let problem1 = new Problem();
+  problem1.question = "What's your **favorite** color?";
+  problem1.timeLimitSec = 10;
+  let problem2 = new Problem();
+  problem2.question = 'Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.\
+<img src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnsAAADyAQMAAAAP2pHtAAAAA3NCSVQICAjb4U/gAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAABYlAAAWJQFJUiTwAAAA70lEQVR4nO3bwQ3CIBiGYRCiRwfw0FHKZjKaozBCN0BTTerBNCF+JD/6vte2T+hPLxzqHBH9Sl4NBjmYxeBJDt7E4FkOFjE4qcF5MQ8WMaj/DgEBAQEBAQEBAQEBAQEBhweTeTCbB1s2xde1/ZtaZhie4P4D9sGWGQICAgICAgICAgICAg4J2j+ajXnWm2pjpSN4UINHNRjNzxAQEBAQEBAQEBAQ8N/AoAa9+VfuB17ersytYF3c9qPLC2xHPqobeBWBPotXKAf7zRAQEBAQEBAQEBAQENAIGJP1FT7A76XOYNCCMTltcjCIPSIiWrsDYz85NQG0QW8AAAAASUVORK5CYII=">';
+  problem2.timeLimitSec = 15;
 
-      let question = questionForUser = res;
+  session.problems = [problem1, problem2];
+  session.problemStartedTime = new Date();
+  session.problemIndex = 0;
 
-      io.sockets.emit('getQuestion', questionForUser);
+  return session;
+}
 
-      startTimer(io, sid, questionForUser);
+class SessionManager {
+  constructor(session, socket) {
+    this.session = session;
+    this.socket = socket;
+    this.timeout = null;
+    // TODO: A better way to do is that, getting client status on connection
+    //       and update only the difference.
+    this.isQuestionUpdateNeeded = true;
+    this.clientNextButtonClicked = false;
+    Object.seal(this);
+
+    this.scheduleUpdate();
+  }
+
+  next() {
+    this.clientNextButtonClicked = true;
+    this.scheduleUpdate();
+  }
+
+  disconnected() {
+    clearTimeout(this.timeout);
+  }
+
+  // TODO better function naming.
+  scheduleUpdate() {
+    clearTimeout(this.timeout);
+    let nextUpdateMs = this._updateSessionState();
+    if (nextUpdateMs != null) {
+      let self = this;
+      nextUpdateMs = Math.min(nextUpdateMs, TIMER_INTERVAL_MS);
+      this.timeout = setTimeout(() => {self.scheduleUpdate();}, nextUpdateMs);
     }
-  })
+  }
+
+  // Updates session problem state and notify to the client.
+  // Returns the next expected update time in ms or null if no more update expected.
+  _updateSessionState() {
+    let session = this.session;
+    if (session.isTestFinished) {
+      return null;
+    }
+
+    const currentTime = new Date();
+    if (this.clientNextButtonClicked ||
+        currentTime - session.problemStartedTime >
+            session.problems[session.problemIndex].timeLimitSec * 1000) {
+      this.clientNextButtonClicked = false;
+      session.problemIndex += 1;
+
+      if (session.problemIndex == session.problems.length) {
+        session.isTestFinished = true;
+        this.socket.emit('setTestFinished');
+        return null;
+      }
+
+      session.problemStartedTime = currentTime;
+      this.isQuestionUpdateNeeded = true;
+    }
+
+    if (this.isQuestionUpdateNeeded) {
+      console.log('setQuestion', session.problems[session.problemIndex].question);
+      this.socket.emit('setQuestion', session.problems[session.problemIndex].question);
+      this.isQuestionUpdateNeeded = false;
+    }
+
+    let problemTimeLimitMs = session.problems[session.problemIndex].timeLimitSec * 1000;
+    let elapsedTimeMs = currentTime - session.problemStartedTime;
+    let remainingTimeMs = problemTimeLimitMs - elapsedTimeMs;
+    console.log('setRemainingTime', remainingTimeMs);
+    this.socket.emit('setRemainingTime', remainingTimeMs);
+
+    return remainingTimeMs;
+  }
 }
 
-function getNextQuestion(io, sId) {
-  QuestionController.get(sId).then(res => {
-    let filteredQuestion = res.problems.filter(q => q.questionId != questionForUser.questionId);
+module.exports = {
+  socket: (io) => {
+    let sessions = {};
+    io.on('connection', (socket) => {
+      console.log("session id == ", socket.handshake.query.id);
+      let sessionId = socket.handshake.query.id;
 
-    let index = getRandomQuestionIndex(filteredQuestion.length);
+      if (sessionId in sessions) {
+        // TODO: This is a temporary code to disallow multiple connections.
+        return;
+      } else {
+        sessions[sessionId] = getDummySession();
+      }
 
-    let question = questionForUser = filteredQuestion[index];
+      let sessionManager = new SessionManager(sessions[sessionId], socket);
 
-    io.sockets.emit('getQuestion', questionForUser);
+      socket.on('nextQuestion', () => {
+        sessionManager.next();
+      });
 
-    startTimer(io, sId, question);
-
-    return SessionController.save(res.sId, question);
-
-  })
-}
-
-function startTimer(io, setId, question, offset = TIMER_INTERVAL) {
-  let interval = setInterval(() => {
-    //first remove entry
-    SessionController.remove(setId);
-
-    question = Object.assign({}, question, {
-      timeRemaining: question.timeRemaining - offset
+      socket.on('disconnect', () => {
+        // TODO: only pause updating session.
+        sessionManager.disconnected();
+        delete sessions[sessionId];
+      });
     });
-
-    // temp code
-    if (question.timeRemaining == 0) {
-      clearInterval(interval);
-    }
-
-    SessionController.save(setId, question);
-
-    io.sockets.emit('getQuestionTimer', question.timeRemaining)
-
-  }, TIMER_INTERVAL * 1000);
-}
-
-function getRandomQuestionIndex(max, min = 0) {
-  let index = Math.floor(Math.random() * (max - min + 1) + min);
-  return index > 0 ? index - 1 : 0;
+    return io;
+  }
 }
