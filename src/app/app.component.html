@@ -1,7 +1,7 @@
 <md-progress-spinner color="primary" *ngIf="isConnecting"></md-progress-spinner>
 <md-card *ngIf="!isConnecting && isConnected && !isFinished">
   <md-card-title>
-    <label>Time Left {{remainingTimeDate?.toISOString().substr(11,8)}}</label>
+    <label>Time Left {{remainingTime?.toISOString().substr(11,8)}}</label>
   </md-card-title>
 
   <md-card-content>

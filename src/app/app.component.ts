@@ -15,9 +15,11 @@ export class AppComponent implements OnInit {
   private socket: any;
   private converter: Converter;
   private questionHtml: string;
-  private remainingTimeDate: Date;
+  private remainingTime: Date;
+  private problemTimeout: Date;
   private uId = Math.floor(Math.random() * 3).toString();
   private isFinished = false;
+  private clockUpdateTimeout: any;
 
   ngOnInit() {
     this.converter = new Converter();
@@ -43,7 +45,8 @@ export class AppComponent implements OnInit {
     });
 
     this.socket.on('setRemainingTime', (remainingTimeMs: number) => {
-      this.remainingTimeDate = new Date(remainingTimeMs);
+      this.problemTimeout = new Date(new Date().getTime() + remainingTimeMs);
+      this.updateTime();
     });
 
     this.socket.on('setTestFinished', () => {
@@ -55,5 +58,17 @@ export class AppComponent implements OnInit {
 
   getNextQuestion() {
     this.socket.emit('nextQuestion');
+  }
+
+  updateTime() {
+    clearTimeout(this.clockUpdateTimeout);
+
+    const remainingTimeMs = this.problemTimeout.getTime() - new Date().getTime();
+    this.remainingTime = new Date(remainingTimeMs);
+
+    const self = this;
+    this.clockUpdateTimeout = setTimeout(() => {
+      self.updateTime();
+    }, remainingTimeMs % 1000);
   }
 }

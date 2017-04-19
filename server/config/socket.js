@@ -1,6 +1,6 @@
 "use strict";
 
-const TIMER_INTERVAL_MS = 1000;
+const TIMER_REFRESH_INTERVAL_SEC = 10;
 
 class Problem {
   constructor() {
@@ -67,7 +67,7 @@ class SessionManager {
     let nextUpdateMs = this._updateSessionState();
     if (nextUpdateMs != null) {
       let self = this;
-      nextUpdateMs = Math.min(nextUpdateMs, TIMER_INTERVAL_MS);
+      nextUpdateMs = Math.min(nextUpdateMs, TIMER_REFRESH_INTERVAL_SEC * 1000);
       this.timeout = setTimeout(() => {self.scheduleUpdate();}, nextUpdateMs);
     }
   }
@@ -106,6 +106,7 @@ class SessionManager {
     let elapsedTimeMs = currentTime - session.problemStartedTime;
     let remainingTimeMs = problemTimeLimitMs - elapsedTimeMs;
     this.socket.emit('setRemainingTime', remainingTimeMs);
+    console.log('setRemainingTime', remainingTimeMs);
 
     return remainingTimeMs;
   }
