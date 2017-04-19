@@ -98,7 +98,6 @@ class SessionManager {
     }
 
     if (this.isQuestionUpdateNeeded) {
-      console.log('setQuestion', session.problems[session.problemIndex].question);
       this.socket.emit('setQuestion', session.problems[session.problemIndex].question);
       this.isQuestionUpdateNeeded = false;
     }
@@ -106,7 +105,6 @@ class SessionManager {
     let problemTimeLimitMs = session.problems[session.problemIndex].timeLimitSec * 1000;
     let elapsedTimeMs = currentTime - session.problemStartedTime;
     let remainingTimeMs = problemTimeLimitMs - elapsedTimeMs;
-    console.log('setRemainingTime', remainingTimeMs);
     this.socket.emit('setRemainingTime', remainingTimeMs);
 
     return remainingTimeMs;
@@ -117,7 +115,6 @@ module.exports = {
   socket: (io) => {
     let sessions = {};
     io.on('connection', (socket) => {
-      console.log("session id == ", socket.handshake.query.id);
       let sessionId = socket.handshake.query.id;
 
       if (sessionId in sessions) {
