@@ -1,27 +1,38 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-import { MaterialModule } from '@angular/material';
+import { AuthGuard } from './shared/guards/auth.guard';
+import { DialogsModule } from './shared/components/confirm-dialog';
 
-import { InterviewPanelModule } from './shared/interview-panel';
+import { InterviewModule } from './interview';
+import { AdminModule } from './admin';
+import { LoginModule } from './login';
+
 import { AppComponent } from './app.component';
-import { routing } from './app.routes';
+import { appRoutes } from './app.routes';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    InterviewPanelModule,
+    AdminModule,
+    BrowserAnimationsModule,
     BrowserModule,
+    DialogsModule,
     FormsModule,
     HttpModule,
-    MaterialModule
+    InterviewModule,
+    LoginModule,
+    RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

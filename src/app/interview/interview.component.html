@@ -1,0 +1,33 @@
+<md-toolbar color="accent">
+  <span>Online Test</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"></span>
+
+  <a md-button routerLink="/admin">Admin</a>
+</md-toolbar>
+
+<md-progress-spinner color="primary" *ngIf="isConnecting"></md-progress-spinner>
+<md-card *ngIf="!isConnecting && isConnected && !isFinished && !!remainingTime">
+  <md-card-title>
+    <label>Time Left {{remainingTime?.toISOString().substr(11,8)}}</label>
+  </md-card-title>
+
+  <md-card-content>
+     <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(questionHtml)>
+     </div>
+     <button md-raised-button color="primary" (click)="getNextQuestion($event)">Next</button>
+  </md-card-content>
+</md-card>
+
+<md-card *ngIf="isFinished">
+  <md-card-title>
+    <label>Test Finished</label>
+  </md-card-title>
+</md-card>
+
+<md-card *ngIf="isInvalidTest">
+  <md-card-title>
+    <label>Invalid test</label>
+  </md-card-title>
+</md-card>

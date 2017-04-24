@@ -26,6 +26,6 @@ module.exports = class RouteConfig {
       credentials: true,
       origin: true
     }));
-    
+
   }
 }

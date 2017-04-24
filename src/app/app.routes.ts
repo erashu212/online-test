@@ -1,10 +1,28 @@
 import { Routes } from '@angular/router';
 
-import { AppComponent } from './app.component';
+import { AuthGuard } from './shared/guards/auth.guard';
 
-export const routing: Routes = [
+import { LoginComponent } from './login/login.component';
+import { InterviewComponent } from './interview/interview.component';
+import {
+  AdminComponent,
+  QuestionMakerComponent
+} from './admin/index';
+
+export const appRoutes: Routes = [
+  {
+    path: 'admin',
+    canActivate: [ AuthGuard ],
+    component: AdminComponent,
+    children: [
+      { path: '', component: QuestionMakerComponent }
+    ]
+  },
+  { path: 'login', component: LoginComponent },
+  { path: 'test/:id', component: InterviewComponent },
   {
     path: '',
-    component: AppComponent
+    redirectTo: 'login',
+    pathMatch: 'full'
   }
 ];

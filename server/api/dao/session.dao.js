@@ -9,20 +9,20 @@ module.exports = class SessionDAO {
   static get(setId) {
     return new Promise((resolve, reject) => {
       let sql = "SELECT " +
-                  " session.question_id, "
-                  + "session.set_id, "
-                  + "session.time_remaining, "
-                  + "question_master.question, "
-                  + "question_master.time_limit "
-                  + "FROM session "
-                  + "INNER JOIN question_master ON session.question_id = question_master.question_id "
-                  + "WHERE session.set_id = '" + setId +"'";
+        " session.question_id, "
+        + "session.set_id, "
+        + "session.time_remaining, "
+        + "question_master.question, "
+        + "question_master.time_limit "
+        + "FROM session "
+        + "INNER JOIN question_master ON session.question_id = question_master.question_id "
+        + "WHERE session.set_id = '" + setId + "'";
 
       DBConfig.getDBInstance()
-      .all(sql, (err, rows) => {
-        err ? reject(err)
-          : resolve(rows);
-      })
+        .all(sql, (err, rows) => {
+          err ? reject(err)
+            : resolve(rows);
+        })
     })
   }
 
@@ -30,11 +30,11 @@ module.exports = class SessionDAO {
     return new Promise((resolve, reject) => {
       DBConfig.getDBInstance()
         .run(
-          `INSERT INTO session(set_id, question_id, time_remaining, created_date) 
+        `INSERT INTO session(set_id, question_id, time_remaining, created_date) 
            VALUES ('${setId}', ${data.questionId}, ${data.timeRemaining}, '${new Date().toString()}')`,
         (err, res) => {
           err ? reject(err)
-              : resolve(res);
+            : resolve(res);
         });
     })
   }
@@ -45,7 +45,7 @@ module.exports = class SessionDAO {
         .run("DELETE FROM  session WHERE set_id ='" + setId + "'",
         (err, res) => {
           err ? reject(err)
-              : resolve(res);
+            : resolve(res);
         });
     })
   }

@@ -1,0 +1,15 @@
+<ace-editor [autoUpdateContent]="true" [mode]="'toml'" [theme]="'chrome'" (textChanged)="textChanged($event);" #editor style="height:250px;">
+</ace-editor>
+<div class="button-row" style="padding-top: 10px;">
+  <button md-raised-button color="accent"  
+    (click)="onPreview();">Preview</button>
+  <button md-raised-button color="primary"
+    (click)="isPreviewMode = false;generateInterviewURL();">Generate URL</button>
+</div>
+<ng-template ngFor let-quest [ngForOf]="data" let-idx="index">
+  <div *ngIf="isPreviewMode">
+    <b>Ques {{idx + 1}}.</b>
+    <b>Time Limit.</b><span>{{quest?.time_limit}}</span>
+    <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(quest.question))"></div>
+  </div>
+</ng-template>
