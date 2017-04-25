@@ -10,7 +10,6 @@ class ServerModel {
     // TODO: use proper UID.
     let sessionId = new Date().getTime().toString();
 
-    console.log(test);
     let session = new Session(test.problem);
     session.start();
 
@@ -22,8 +21,6 @@ class ServerModel {
     return this.sessions[sessionId];
   }
 }
-
-
 
 // Singleton.
 const serverModel = new ServerModel();

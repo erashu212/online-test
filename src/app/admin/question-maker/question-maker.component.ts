@@ -85,9 +85,10 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
       this.data = parse(term);
       // TODO: Even if the parsing is successful, the config can be still invalid for many reasons e.g.,
       //       - Having incorrect field, e.g., [[problen]].
-      //       - Not having nesseary field, e.g., question or time_limit.
+      //       - Not having necessary field, e.g., question or time_limit.
       //       - Incorrect Markdown format for question text
       //       - Incorrect format for time_limit, e.g., time_limit = "hello";
+      // TODO: Use JSON Schema validator https://github.com/epoberezkin/ajv .
       this.isInvalidTOML = false;
     } catch (error) {
       console.log(error);

@@ -1,6 +1,5 @@
 "use strict";
 const serverModel = require('../api/models/server.model');
-const Problem = require('../api/models/problem.model');
 const Session = require('../api/models/session.model');
 
 module.exports = {

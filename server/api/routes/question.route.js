@@ -1,5 +1,7 @@
 const serverModel = require('../models/server.model');
 
+// TODO: Convert these APIs to Socket IO
+// TODO: Authentication check for these APIs.  Currently anyone can call this.
 module.exports = class QuestionRoute {
   static init(app, router) {
     router
