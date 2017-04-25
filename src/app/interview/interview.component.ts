@@ -85,7 +85,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
         }
       });
 
-    // TODO: errror log on unhandled socket IO function call.
+    // TODO: error log on unhandled socket IO function call.
   }
 
   ngOnDestroy() {
@@ -100,6 +100,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
         .confirm('Confirm Dialog', 'Are you sure you want to do this?')
         .subscribe(res => {
           if (res) {
+            // TODO: UI should be frozen between "disable clicked" and "next question received".
             this.socket.emit('nextQuestion');
           }
         })

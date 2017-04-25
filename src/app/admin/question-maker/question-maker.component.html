@@ -1,15 +1,18 @@
 <ace-editor [autoUpdateContent]="true" [mode]="'toml'" [theme]="'chrome'" (textChanged)="textChanged($event);" #editor style="height:250px;">
 </ace-editor>
 <div class="button-row" style="padding-top: 10px;">
-  <button md-raised-button color="accent"  
-    (click)="onPreview();">Preview</button>
-  <button md-raised-button color="primary"
-    (click)="isPreviewMode = false;generateInterviewURL();">Generate URL</button>
+  <button [disabled]="isInvalidTOML" md-raised-button color="primary"
+    (click)="generateInterviewURL();">Generate URL</button>
 </div>
-<ng-template ngFor let-quest [ngForOf]="data" let-idx="index">
-  <div *ngIf="isPreviewMode">
-    <b>Ques {{idx + 1}}.</b>
-    <b>Time Limit.</b><span>{{quest?.time_limit}}</span>
-    <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(quest.question))"></div>
-  </div>
-</ng-template>
+<div *ngIf="!isInvalidTOML">
+  <!--TODO: the following is inefficient as it renders everything again.  Make it efficient.-->
+  <ng-template ngFor let-problem [ngForOf]="data?.problem" let-idx="index">
+    <b>Problem {{idx + 1}}.</b>
+    <b>Time Limit </b><span>{{problem?.time_limit}}</span>
+    <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.question))"></div>
+  </ng-template>
+</div>
+<div *ngIf="isInvalidTOML">
+  <!--TODO: Show the error location in the ACE editor directly. -->
+  <span>{{parseError.message}} {{parseError.line}}:{{parseError.column}}</span>
+</div>

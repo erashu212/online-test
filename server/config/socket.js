@@ -1,61 +1,32 @@
 "use strict";
-
+const serverModel = require('../api/models/server.model');
 const Problem = require('../api/models/problem.model');
 const Session = require('../api/models/session.model');
 
-const SessionManager = require('../api/controllers/session.controller');
-const QuestionController = require('../api/controllers/question.controller');
-
-let sessionCache;
-
-function getSession(sessionId) {
-  let session = new Session();
-
-  let problemSet = QuestionController.get(sessionId);
-  if(!problemSet) return null;
-
-  delete problemSet.setId;
-
-  session.problems =  problemSet.questions;
-  session.problemStartedTime = new Date();
-  session.problemIndex = 0;
-
-  // TODO: should be replaced with db integration.
-  sessionCache[sessionId] = session;
-  return session;
-}
-
 module.exports = {
   socket: (io) => {
-    let sessions = {};
-    // TODO: This will be removed when DB is integrated.
-    sessionCache = {};
+
     io.on('connection', (socket) => {
       let sessionId = socket.handshake.query.id;
+      const session = serverModel.getSession(sessionId);
 
-      if (sessionId in sessions) {
-        // TODO: This is a temporary code to disallow multiple connections.
-        return;
-      } else {
-        sessions[sessionId] = sessionCache[sessionId] || getSession(sessionId);
-      }
-
-      // if no question, test has been finished or not set
-      if(!sessions[sessionId]) {
+      if(!session) {
         socket.emit('setInvalidTest');
         return;
       };
 
-      let sessionManager = new SessionManager(sessions[sessionId], socket);
+      // Multiple connection is disallowed.
+      if (!session.clientConnected(socket)) {
+        // TODO: Show multiple connection error message.
+        return;
+      }
 
       socket.on('nextQuestion', () => {
-        sessionManager.next();
+        session.next();
       });
 
       socket.on('disconnect', () => {
-        // TODO: only pause updating session.
-        sessionManager.disconnected();
-        delete sessions[sessionId];
+        session.clientDisconnected();
       });
     });
     return io;

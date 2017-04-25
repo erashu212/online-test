@@ -3,8 +3,6 @@ import { Http, RequestMethod } from '@angular/http';
 
 import { httpRequest } from '../../shared/services/httpRequest';
 
-import { IQuestionMaker } from './question-maker.interfaces';
-
 @Injectable()
 export class QuestionMakerService {
   constructor(
@@ -21,11 +19,11 @@ export class QuestionMakerService {
     });
   }
 
-  saveQuestion(questions: Array<IQuestionMaker.Problem>) {
+  saveTest(test) {
     return httpRequest(this.http, {
       url: '/api/admin/question',
       method: RequestMethod.Post,
-      body: questions
+      body: test
     });
   }
 }

@@ -1,24 +1,23 @@
-const QuestionController = require('../controllers/question.controller');
+const serverModel = require('../models/server.model');
 
 module.exports = class QuestionRoute {
   static init(app, router) {
     router
       .get('/api/admin/question', (req, res, next) => {
         let setId = req.body;
-        let status = !!question ? 200 : 400;
+        let status = question ? 200 : 400;
         return res.status(status).json({ data: question })
       })
       .post('/api/admin/question', (req, res, next) => {
-        let uid;
-        let questions = req.body;
+        let sessionId;
+        let test = req.body;
         let status = 400;
 
-        if (!!questions) {
+        if (test) {
           status = 201;
-
-          uid = QuestionController.save(questions);
+          sessionId = serverModel.newSession(test);
         }
-        return res.status(status).json({ data: uid })
+        return res.status(status).json({ 'sessionId': sessionId })
       })
   }
 }
