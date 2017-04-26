@@ -18,7 +18,7 @@ Node.js 6.9 or later
 
 ### Installation
 ```
-  npm install
+npm install
 ```
 
 ### Start
@@ -38,9 +38,9 @@ Node.js 6.9 or later
  ## Authors
 
 * **Ashutosh Singh** [Developer](https://github.com/erashu212)
-* **Kibeom Kim**     [Owner](https://github.com/m19g)
+* **Kibeom Kim**     [Developer](https://github.com/m19g)
 
-**Kibeom Kim holds the copyright.**
+**[M19G Inc.](http://www.m19g.com) holds the copyright.**
 
 
 ## License
