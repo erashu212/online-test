@@ -64,6 +64,8 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   }
 
   textChanged(text: string) {
+    // TODO: Save the text locally or at server so that the user can continue editing
+    //       across sessions.
     this.parseTOML(text);
   }
 
