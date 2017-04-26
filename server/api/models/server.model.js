@@ -15,6 +15,7 @@ class ServerModel {
   newSession(test) {
     let sessionId = this.getNewSessionId();
 
+    // TODO: We need to validate `test` first.
     let session = new Session(test.problem);
     session.start();
 
