@@ -1,7 +1,6 @@
 "use strict";
 
 const sqlite3 = require('sqlite3').verbose();
-const dbConst = require('../constants/db.json');
 
 const FILE_NAME = "test.db";
 

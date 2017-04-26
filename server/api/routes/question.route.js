@@ -1,3 +1,5 @@
+'use strict';
+
 const serverModel = require('../models/server.model');
 
 // TODO: Convert these APIs to Socket IO
@@ -5,12 +7,12 @@ const serverModel = require('../models/server.model');
 module.exports = class QuestionRoute {
   static init(app, router) {
     router
-      .get('/api/admin/question', (req, res, next) => {
+      .get('/api/admin/question', (req, res) => {
         let setId = req.body;
-        let status = question ? 200 : 400;
-        return res.status(status).json({ data: question })
+        let status = setId ? 200 : 400;
+        return res.status(status).json({ data: setId })
       })
-      .post('/api/admin/question', (req, res, next) => {
+      .post('/api/admin/question', (req, res) => {
         let sessionId;
         let test = req.body;
         let status = 400;

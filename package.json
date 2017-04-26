@@ -8,7 +8,8 @@
     "precache": "sw-precache --verbose --config=sw-precache-config.js",
     "start.client": "ng serve",
     "start.server": "node ./server/index",
-    "start": "npm run build.prod && node  ./server/index"
+    "start": "npm run build.prod && node  ./server/index",
+    "server.lint": "./node_modules/.bin/eslint server/."
   },
   "private": true,
   "//": [
@@ -59,6 +60,7 @@
     "@types/node": "^7.0.12",
     "@types/showdown": "^1.4.32",
     "codelyzer": "^3.0.0",
+    "eslint": "^3.19.0",
     "jasmine-core": "^2.6.0",
     "jasmine-spec-reporter": "^4.0.0",
     "karma": "^1.6.0",

@@ -1,6 +1,6 @@
 "use strict";
+
 const serverModel = require('../api/models/server.model');
-const Session = require('../api/models/session.model');
 
 module.exports = {
   socket: (io) => {
@@ -9,7 +9,7 @@ module.exports = {
       let sessionId = socket.handshake.query.id;
       const session = serverModel.getSession(sessionId);
 
-      if(!session) {
+      if (!session) {
         socket.emit('setInvalidTest');
         return;
       };

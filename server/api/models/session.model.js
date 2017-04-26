@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = class Session {
   constructor(problems) {
     this.problems = problems;
@@ -37,7 +39,8 @@ module.exports = class Session {
     if (this.socket) {
       if (this.isTestFinished) {
         this.socket.emit('setTestFinished');
-      } else {
+      }
+      else {
         this.socket.emit('setQuestion', this.getProblem().question);
         this.socket.emit('setRemainingTime', this.getRemainingTimeMs());
       }
@@ -49,7 +52,8 @@ module.exports = class Session {
     if (this.problemIndex == this.problems.length) {
       this.isTestFinished = true;
       this.problemStartedTime = undefined;
-    } else {
+    }
+    else {
       this.problemStartedTime = new Date();
     }
 
@@ -81,6 +85,8 @@ module.exports = class Session {
 
     // TODO: this.getRemainingTimeMs() can be negative, and if so, the below is not correct.
     const self = this;
-    this.updateTimeout = setTimeout(() => {self._update();}, this.getRemainingTimeMs());
+    this.updateTimeout = setTimeout(() => {
+      self._update();
+    }, this.getRemainingTimeMs());
   }
 }

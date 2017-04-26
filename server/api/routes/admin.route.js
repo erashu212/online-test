@@ -1,7 +1,9 @@
+'use strict';
+
 module.exports = class AdminRoute {
   static init(app, router) {
     router
-      .post('/api/admin/session', (req, res, next) => {
+      .post('/api/admin/session', (req, res) => {
         let user = req.body.user;
         let status = 400;
         if (!!user) {
@@ -10,9 +12,12 @@ module.exports = class AdminRoute {
         }
         return res.status(status).json({ data: user })
       })
-      .delete('/api/admin/session', (req, res, next) => {
+      .delete('/api/admin/session', (req, res) => {
         delete req.session.user;
-        let status = !!req.session.user ? 400 : 200;
+        let status = 400;
+        if (!req.session.user) {
+          status = 200;
+        }
         return res.status(status).json({ data: '' })
       });
   }

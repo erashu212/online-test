@@ -14,6 +14,7 @@ branches:
 script:
   - npm run build.prod
   - ng lint
+  - npm run server.lint
 
 notifications:
   email:

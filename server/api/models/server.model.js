@@ -1,5 +1,6 @@
-const Session = require('../models/session.model');
+'use strict';
 
+const Session = require('../models/session.model');
 class ServerModel {
   constructor() {
     this.sessions = {};
