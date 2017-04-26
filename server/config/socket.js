@@ -10,6 +10,13 @@ module.exports = {
       const session = serverModel.getSession(sessionId);
 
       if (!session) {
+        // TODO: We can figure out if the session id is valid.
+        //       Make use of this.
+        // if (serverModel.isSessionIdValid(sessionId)) {
+        //   console.log("session id valid");
+        // } else {
+        //   console.log("session id invalid");
+        // }
         socket.emit('setInvalidTest');
         return;
       };
