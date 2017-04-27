@@ -1,18 +1,34 @@
-<ace-editor [autoUpdateContent]="true" [mode]="'toml'" [theme]="'chrome'" (textChanged)="textChanged($event);" #editor style="height:250px;">
-</ace-editor>
-<div class="button-row" style="padding-top: 10px;">
-  <button [disabled]="isInvalidTOML" md-raised-button color="primary"
-    (click)="generateInterviewURL();">Generate URL</button>
-</div>
-<div *ngIf="!isInvalidTOML">
-  <!--TODO: the following is inefficient as it renders everything again.  Make it efficient.-->
-  <ng-template ngFor let-problem [ngForOf]="data?.problem" let-idx="index">
-    <b>Problem {{idx + 1}}.</b>
-    <b>Time Limit </b><span>{{problem?.time_limit}}</span>
-    <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.question))"></div>
-  </ng-template>
-</div>
-<div *ngIf="isInvalidTOML">
-  <!--TODO: Show the error location in the ACE editor directly. -->
-  <span>{{parseError.message}} {{parseError.line}}:{{parseError.column}}</span>
+<div style="display:flex; flex-direction:column; height:100%;">
+  <div style="flex:1;">
+    <div style="float:left; height:100%; width:50%;">
+      <ace-editor [autoUpdateContent]="true" [mode]="'toml'" [theme]="'chrome'" (textChanged)="textChanged($event);" #editor style="height:100%;">
+      </ace-editor>
+    </div>
+    <div style="float:right; height:100%; width:50%;">
+      <md-card style="height:100%; box-sizing: border-box;">
+        <md-card-header>
+          <md-card-title>
+            <b>Preview</b>
+          </md-card-title>
+        </md-card-header>
+        <md-card-content>
+          <div *ngIf="!isInvalidTOML">
+            <!--TODO: the following is inefficient as it renders everything again.  Make it efficient.-->
+            <ng-template ngFor let-problem [ngForOf]="data?.problem" let-idx="index">
+              <b>Problem {{idx + 1}}.</b>
+              <b>Time Limit </b><span>{{problem?.time_limit}}</span>
+              <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.question))"></div>
+            </ng-template>
+          </div>
+          <div *ngIf="isInvalidTOML">
+            <!--TODO: Show the error location in the ACE editor directly. -->
+            <span>{{parseError.message}} {{parseError.line}}:{{parseError.column}}</span>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
+  </div>
+  <div>
+    <button md-raised-button [disabled]="isInvalidTOML" (click)="generateInterviewURL();" color="primary">Generate URL</button>
+  </div>
 </div>

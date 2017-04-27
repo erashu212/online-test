@@ -30,7 +30,8 @@ declare const showdown: any;
 
 @Component({
   selector: 'app-question-maker',
-  templateUrl: './question-maker.component.html'
+  templateUrl: './question-maker.component.html',
+  styles: [':host{flex:1}']
 })
 export class QuestionMakerComponent implements OnInit, OnDestroy {
 

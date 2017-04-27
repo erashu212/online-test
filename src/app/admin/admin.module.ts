@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 import { MaterialModule, MdButtonModule } from '@angular/material';
 
 import { AceEditorModule } from 'ng2-ace-editor';
