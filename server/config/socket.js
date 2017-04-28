@@ -34,6 +34,10 @@ module.exports = {
       socket.on('disconnect', () => {
         session.clientDisconnected();
       });
+
+      socket.on('answerTextUpdate', (diff) => {
+        session.answerTextUpdate(diff);
+      })
     });
     return io;
   }

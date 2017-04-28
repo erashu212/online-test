@@ -94,6 +94,11 @@ export class InterviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  onAnswerTextChange() {
+    // TODO: Create diff and call server.
+    // this.socket.emit('answerTextUpdate', diff);
+  }
+
   getNextQuestion() {
     this._subs.push(
       this.dialogService

@@ -3,6 +3,9 @@
 module.exports = class Session {
   constructor(problems) {
     this.problems = problems;
+    // this.answers = [[], [], [], ... []] where the length is the length of
+    // problems.
+    this.answers = [...Array(problems.length)].map(() => []);
     this.problemStartedTime = undefined;
     this.problemIndex = undefined;
     this.isTestFinished = undefined;
@@ -59,6 +62,10 @@ module.exports = class Session {
 
     this.updateClient();
     this._update();
+  }
+
+  answerTextUpdate(diff) {
+    this.answers[this.problemIndex].push([new Date(), diff]);
   }
 
   getProblem() {
