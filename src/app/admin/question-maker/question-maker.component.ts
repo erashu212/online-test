@@ -56,6 +56,11 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.converter = new Converter();
+
+    // TODO: Don't show if the editor is empty.
+    window.onbeforeunload = function(e) {
+      return '';
+    };
   }
 
   ngOnDestroy() {
