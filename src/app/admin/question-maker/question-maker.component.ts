@@ -5,7 +5,8 @@ import {
   EventEmitter,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  HostListener
 } from '@angular/core';
 
 import { DomSanitizer } from '@angular/platform-browser';
@@ -56,17 +57,17 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.converter = new Converter();
-
-    // TODO: Don't show if the editor is empty.
-    window.onbeforeunload = function(e) {
-      return '';
-    };
   }
 
   ngOnDestroy() {
     while (this._subs.length) {
       this._subs.pop().unsubscribe();
     }
+  }
+
+  @HostListener('window:beforeunload')
+  beforeUnload() {
+    return !this.data ? 'You are about to lose data.' : '';
   }
 
   textChanged(text: string) {
