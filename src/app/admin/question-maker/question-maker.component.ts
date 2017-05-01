@@ -27,7 +27,7 @@ import { DialogsService } from '../../shared/components/confirm-dialog';
 
 import { QuestionMakerService } from './question-maker.services';
 
-declare const showdown: any;
+declare const showdown: any, window: any;
 
 @Component({
   selector: 'app-question-maker',
@@ -83,7 +83,7 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
           if (!!res && !!res['sessionId']) {
             // TODO: Instead of a dialog, present text directly on the next of the button
             //       and also show "copy" button.  Similar to goo.gl url shortner.
-            this.dialogService.confirm('URL', `http://localhost:4200/test/${res.sessionId}`);
+            this.dialogService.confirm('URL', `${window.location.origin}/test/${res.sessionId}`);
           }
         })
       );

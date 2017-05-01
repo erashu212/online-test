@@ -23,6 +23,10 @@ class ServerModel {
     return sessionId;
   }
 
+  getSessions() {
+    return this.sessions;
+  }
+
   getSession(sessionId) {
     return this.sessions[sessionId];
   }

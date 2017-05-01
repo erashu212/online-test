@@ -1,0 +1,14 @@
+<div style="margin:10px;">
+  <h1>Session List</h1>
+  <div class='md-padding' layout="row" layout-wrap>
+    <md-card style="width: 350px;" *ngFor="let session of sessions;">
+      <md-card-content>
+        <p><b>Test Finished</b> {{session?.isTestFinished ? 'Yes' : 'No'}}</p>
+        <p><b>SessionId</b> {{session?.id}}</p>
+      </md-card-content>
+      <md-card-actions layout="row" layout-align="end center">
+        <button md-raised-button color="primary" routerLink="/admin/view/{{session?.id}}">View</button>
+      </md-card-actions>
+    </md-card>
+  </div>
+</div>

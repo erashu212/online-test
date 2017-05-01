@@ -6,11 +6,14 @@ import { MaterialModule, MdButtonModule } from '@angular/material';
 import { AceEditorModule } from 'ng2-ace-editor';
 
 import { QuestionMakerComponent, QuestionMakerService } from './question-maker/index';
+import { DashboardComponent, DashboardDetailsComponent } from './dashboard/index';
 import { AdminComponent } from './admin.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
+    DashboardComponent,
+    DashboardDetailsComponent,
     QuestionMakerComponent
   ],
   imports: [

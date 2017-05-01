@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { MdSnackBar } from '@angular/material';
 
+import 'brace/theme/chrome';
+
 import * as io from 'socket.io-client';
 import { Converter } from 'showdown/dist/showdown';
 
@@ -45,7 +47,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
       .map(p => p['id'])
       .subscribe(id => {
         if (!!id) {
-          this.socket = io.connect('http://localhost:4200', {
+          this.socket = io.connect(window.location.origin, {
             query: `id=${id}`,
             reconnection: true
           });
@@ -94,7 +96,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAnswerTextChange() {
+  onAnswerTextUpdate(answer: string) {
     // TODO: Create diff and call server.
     // this.socket.emit('answerTextUpdate', diff);
   }
