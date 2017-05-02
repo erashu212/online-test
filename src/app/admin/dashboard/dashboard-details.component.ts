@@ -7,6 +7,8 @@ import 'brace/theme/chrome';
 import * as io from 'socket.io-client';
 import { Converter } from 'showdown/dist/showdown';
 
+import * as fossilDelta from 'fossil-delta';
+
 declare const window: any;
 
 @Component({
@@ -15,16 +17,18 @@ declare const window: any;
 export class DashboardDetailsComponent implements OnInit {
   isConnected = false;
   isConnecting = false;
-  sessions: any[];
+  sessionDetails: any;
+  questionHTML: string;
+  converter: Converter;
 
   private socket: any;
-  private converter: Converter;
 
   constructor(
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    this.converter = new Converter();
     this.route.params
       .map(p => p['id'])
       .subscribe(id => {
@@ -44,6 +48,15 @@ export class DashboardDetailsComponent implements OnInit {
             this.isConnected = false;
             this.isConnecting = true;
             this.socket.socket.reconnect();
+          });
+
+          this.socket.on('showSession', (data) => {
+            if (data) {
+              this.sessionDetails = Object.assign({}, data, {
+                answers: fossilDelta.apply(null, data.answers)
+              });
+
+            }
           });
         }
       });

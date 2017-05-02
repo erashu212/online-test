@@ -1,18 +1,17 @@
-<!--<md-progress-spinner color="primary" *ngIf="isConnecting"></md-progress-spinner>
-<md-card *ngIf="!isConnecting && isConnected && !isFinished && !!remainingTime">
-  <md-card-title>
-    <label>Time Left {{remainingTime?.toISOString().substr(11,8)}}</label>
-  </md-card-title>
+<div style="margin:10px;">
+  <md-progress-spinner color="primary" *ngIf="isConnecting"></md-progress-spinner>
+  <div *ngIf="!isConnecting && isConnected && !isFinished && !!remainingTime">
+    <div class='md-padding' layout="row" layout-wrap>
+      <md-card style="width: 350px;" *ngFor="let problem of sessionDetails.problems; let idx = index;">
 
-  <md-card-content>
-    <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(questionHtml)>
+        <md-card-content>
+          <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.problem.question))>
+          </div>
+        </md-card-content>
+        <md-card-content>
+          <ace-editor [autoUpdateContent]="true" [theme]="'chrome'" 
+          [readOnly]="true" style="min-height: 200px;height:100%;width:100%;">
+          </ace-editor>
+        </md-card-content>
+      </md-card>
     </div>
-  </md-card-content>
-  <md-card-content>
-    <ace-editor [autoUpdateContent]="true" 
-      [theme]="'chrome'"
-      [readOnly]="true"
-     style="min-height: 200px;height:100%;width:100%;">
-    </ace-editor>
-  </md-card-content>
-</md-card>-->
