@@ -11,6 +11,8 @@ import 'brace/theme/chrome';
 import * as io from 'socket.io-client';
 import { Converter } from 'showdown/dist/showdown';
 
+import * as fossilDelta from 'fossil-delta';
+
 import { DialogsService } from '../shared/components/confirm-dialog';
 
 @Component({
@@ -25,6 +27,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
   isFinished = false;
   questionHtml: string;
   remainingTime: Date;
+  previousAnswerText: string = '';
 
   private socket: any;
   private converter: Converter;
@@ -66,6 +69,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
 
           this.socket.on('setQuestion', (questionToml: string) => {
             this.wasRemainingTimeSnackbarShown = false;
+            this.previousAnswerText = '';
             // dismiss confirmation dialog
             this.dialogService.close();
 
@@ -98,7 +102,9 @@ export class InterviewComponent implements OnInit, OnDestroy {
 
   onAnswerTextUpdate(answer: string) {
     // TODO: Create diff and call server.
-    // this.socket.emit('answerTextUpdate', diff);
+    let diff = fossilDelta.create(this.previousAnswerText, answer);
+    this.previousAnswerText = answer;
+    this.socket.emit('answerTextUpdate', diff);
   }
 
   getNextQuestion() {

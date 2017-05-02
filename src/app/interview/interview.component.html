@@ -26,6 +26,7 @@
   </md-card-content>
   <md-card-content>
     <ace-editor [autoUpdateContent]="true" [theme]="'chrome'"
+    [(text)]="previousAnswerText"
     (textChanged)="onAnswerTextUpdate($event);"
      style="min-height: 200px;height:100%;width:100%;">
     </ace-editor>
