@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import 'brace/theme/chrome';
 
@@ -9,7 +9,7 @@ declare const window: any;
 @Component({
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   isConnected = false;
   isConnecting = false;
   sessions: any[];

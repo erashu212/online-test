@@ -9,22 +9,22 @@ module.exports = {
       let sessionId = socket.handshake.query.id;
       let isAdmin = socket.handshake.query.admin == '1' || false;
 
-      if(isAdmin) {
+      if (isAdmin) {
         let sessions = serverModel.getSessions();
 
-        sessions = Object.keys(serverModel.getSessions()).map(k => ({
+        sessions = Object.keys(serverModel.getSessions()).map((k) => ({
           'id': k,
-          'isTestFinished' : sessions[k].isTestFinished
+          'isTestFinished': sessions[k].isTestFinished
         }));
         socket.emit('setSessionList', sessions);
       }
-      else if(sessionId) {
+      else if (sessionId) {
         initTestTakerSetup(socket, sessionId);
       }
       else {
         return;
       }
-     
+
     });
     return io;
   }

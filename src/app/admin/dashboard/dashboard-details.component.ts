@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -12,7 +12,7 @@ declare const window: any;
 @Component({
   templateUrl: './dashboard-details.component.html'
 })
-export class DashboardDetailsComponent {
+export class DashboardDetailsComponent implements OnInit {
   isConnected = false;
   isConnecting = false;
   sessions: any[];

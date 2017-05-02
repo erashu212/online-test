@@ -27,7 +27,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
   isFinished = false;
   questionHtml: string;
   remainingTime: Date;
-  previousAnswerText: string = '';
+  previousAnswerText = '';
 
   private socket: any;
   private converter: Converter;
@@ -102,7 +102,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
 
   onAnswerTextUpdate(answer: string) {
     // TODO: Create diff and call server.
-    let diff = fossilDelta.create(this.previousAnswerText, answer);
+    const diff = fossilDelta.create(this.previousAnswerText, answer);
     this.previousAnswerText = answer;
     this.socket.emit('answerTextUpdate', diff);
   }
