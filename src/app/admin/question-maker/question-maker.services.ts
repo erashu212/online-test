@@ -19,11 +19,14 @@ export class QuestionMakerService {
     });
   }
 
-  saveTest(test) {
+  saveTest(test, user = null) {
     return httpRequest(this.http, {
       url: '/api/admin/question',
       method: RequestMethod.Post,
-      body: test
+      body: {
+        test: test,
+        user: user
+      }
     });
   }
 }

@@ -14,12 +14,12 @@ module.exports = class QuestionRoute {
       })
       .post('/api/admin/question', (req, res) => {
         let sessionId;
-        let test = req.body;
+        let {test, user} = req.body;
         let status = 400;
 
         if (test) {
           status = 201;
-          sessionId = serverModel.newSession(test);
+          sessionId = serverModel.newSession(test, user);
         }
         return res.status(status).json({ 'sessionId': sessionId })
       })

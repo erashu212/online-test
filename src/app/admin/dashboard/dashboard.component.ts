@@ -1,41 +1,60 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import 'brace/theme/chrome';
 
 import * as io from 'socket.io-client';
+import { Converter } from 'showdown/dist/showdown';
+
+import * as fossilDelta from 'fossil-delta';
+
+import { DashboardService } from './dashboard.service';
+import { AuthService } from '../../login/login.services';
 
 declare const window: any;
 
 @Component({
-  templateUrl: './dashboard.component.html'
+  templateUrl: './dashboard.component.html',
+  styleUrls: [
+    './dashboard.component.css'
+  ]
 })
-export class DashboardComponent implements OnInit {
-  isConnected = false;
-  isConnecting = false;
-  sessions: any[];
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  private socket: any;
+  sessions: Array<any>;
+  converter: Converter;
+  sessionProblem: any;
+
+  private _subs: Array<Subscription> = [];
+
+  constructor(
+    private dashboardService: DashboardService,
+    private authService: AuthService,
+    public sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit() {
-    this.socket = io.connect(window.location.origin, {
-      query: `admin=1`,
-      reconnection: true
-    });
+    this.converter = new Converter();
 
-    this.socket.on('connect', () => {
-      this.isConnected = true;
-      this.isConnecting = false;
-    });
+    this._subs.push(
+      this.authService.getUserEmail().subscribe((email: string) => {
+        this.dashboardService.getSessionList(email).subscribe((res: Array<any>) => {
+          this.sessions = res;
+        });
+      })
+    );
+  }
 
-    // tell socket.io to never give up :)
-    this.socket.on('error', () => {
-      this.isConnected = false;
-      this.isConnecting = true;
-      this.socket.socket.reconnect();
-    });
+  ngOnDestroy() {
+    while (this._subs.length) {
+      this._subs.pop().unsubscribe();
+    }
+  }
 
-    this.socket.on('setSessionList', (sessions: any[]) => {
-      this.sessions = sessions;
-    });
+  showAnswer(diff) {
+    return fossilDelta.apply('', diff);
   }
 }

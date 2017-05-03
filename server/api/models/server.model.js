@@ -1,6 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
+const _ = require('lodash');
+
 const Session = require('../models/session.model');
 
 class ServerModel {
@@ -12,19 +14,33 @@ class ServerModel {
     Object.seal(this);
   }
 
-  newSession(test) {
+  newSession(test, user) {
     let sessionId = this.getNewSessionId();
 
     // TODO: We need to validate `test` first.
-    let session = new Session(test.problem);
+    let session = new Session(test.problem, user);
     session.start();
 
     this.sessions[sessionId] = session;
     return sessionId;
   }
 
-  getSessions() {
-    return this.sessions;
+  getSessions(user) {
+    const sessions = _.reduce(this.sessions, (acc, val, key) => {
+      if (val['createdByUser'] == user) {
+        acc[key] = {
+          'id': key,
+          'problems': val.problems,
+          'answers': val.answers,
+          'problemIndex': val.problemIndex,
+          'problemStartedTime': val.problemStartedTime,
+          'isTestFinished': val.isTestFinished
+        }
+      }
+      return acc;
+    }, {});
+
+    return _.values(sessions);
   }
 
   getSession(sessionId) {
@@ -33,9 +49,9 @@ class ServerModel {
 
   getNewSessionId() {
     const cipher = crypto.createCipher(
-        'AES-256-CBC-HMAC-SHA256', this.sessionIdGeneratorKey);
+      'AES-256-CBC-HMAC-SHA256', this.sessionIdGeneratorKey);
     let sessionId =
-        cipher.update(this.sessionIdCounter.toString(), 'utf8', 'hex');
+      cipher.update(this.sessionIdCounter.toString(), 'utf8', 'hex');
     sessionId += cipher.final('hex');
     this.sessionIdCounter += 1;
     return sessionId;
@@ -43,7 +59,7 @@ class ServerModel {
 
   isSessionIdValid(sessionId) {
     const decipher = crypto.createDecipher(
-        'AES-256-CBC-HMAC-SHA256', this.sessionIdGeneratorKey);
+      'AES-256-CBC-HMAC-SHA256', this.sessionIdGeneratorKey);
     try {
       decipher.update(sessionId, 'hex', 'utf8');
       decipher.final('utf8');

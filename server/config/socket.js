@@ -6,16 +6,11 @@ module.exports = {
   socket: (io) => {
 
     io.on('connection', (socket) => {
-      let sessionId = socket.handshake.query.id;
-      let isAdmin = socket.handshake.query.admin == '1' || false;
+      let { id: sessionId, user } = socket.handshake.query;
 
-      if (isAdmin) {
-        let sessions = serverModel.getSessions();
+      if (user) {
+        let sessions = serverModel.getSessions(user);
 
-        sessions = Object.keys(serverModel.getSessions()).map((k) => ({
-          'id': k,
-          'isTestFinished': sessions[k].isTestFinished
-        }));
         socket.emit('setSessionList', sessions);
       }
       else if (sessionId) {

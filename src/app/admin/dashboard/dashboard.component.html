@@ -1,14 +1,32 @@
-<div style="margin:10px;">
-  <h1>Session List</h1>
-  <div class='md-padding' layout="row" layout-wrap>
-    <md-card style="width: 350px;" *ngFor="let session of sessions;">
+<md-sidenav-container>
+  <md-sidenav mode="side" opened="true" class="example-sidenav">
+    <h3>Session List</h3>
+    <ul class="no-style">
+      <li *ngFor="let session of sessions; let idx = index;">
+        <md-button-toggle (click)="sessionProblem = session;">
+          {{idx + 1}} {{session?.isTestFinished ? '' : 'In Progress ...'}}
+        </md-button-toggle>
+      </li>
+    </ul>
+  </md-sidenav>
+  <div class="example-sidenav-content">
+    <md-card style="height:100%; width:100%; box-sizing: border-box; margin-left:2px;" 
+    *ngIf="!!sessionProblem">
       <md-card-content>
-        <p><b>Test Finished</b> {{session?.isTestFinished ? 'Yes' : 'No'}}</p>
-        <p><b>SessionId</b> {{session?.id}}</p>
+        <div *ngFor="let problem of sessionProblem?.problems; let idx = index">
+          <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.question))>
+          </div>
+          <ng-container *ngIf="!!problem.answers && problem.answers.length > 0">
+            <div *ngFor="let answer of problem.answers[idx]; let ansIndex = index;">
+              <ace-editor [autoUpdateContent]="true" [text]="showAnswer(answer[ansIndex].diff)" [theme]="'chrome'" [readOnly]="true" style="min-height: 200px;height:100%;width:100%;">
+              </ace-editor>
+            </div>
+            <div>
+              <button md-raised-button color="primary" (click)="ansIndex = ansIndex + 1">Next</button>
+            </div>
+            </ ng-container>
+        </div>
       </md-card-content>
-      <md-card-actions layout="row" layout-align="end center">
-        <button md-raised-button color="primary" routerLink="/admin/view/{{session?.id}}">View</button>
-      </md-card-actions>
     </md-card>
   </div>
-</div>
+</md-sidenav-container>

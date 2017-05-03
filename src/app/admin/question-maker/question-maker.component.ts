@@ -26,6 +26,7 @@ import * as _ from 'lodash';
 import { DialogsService } from '../../shared/components/confirm-dialog';
 
 import { QuestionMakerService } from './question-maker.services';
+import { AuthService } from '../../login/login.services';
 
 declare const showdown: any, window: any;
 
@@ -47,16 +48,22 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   public isInvalidTOML = false;
   public parseError = null;
   private _subs: Array<Subscription> = [];
+  private email: string;
 
   constructor(
     private dialog: MdDialog,
     private quesService: QuestionMakerService,
     public sanitizer: DomSanitizer,
-    private dialogService: DialogsService
+    private dialogService: DialogsService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     this.converter = new Converter();
+
+    this._subs.push(
+      this.authService.getUserEmail().subscribe((email: string) => this.email = email)
+    );
   }
 
   ngOnDestroy() {
@@ -79,7 +86,7 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   generateInterviewURL() {
     if (!_.isEmpty(this.data)) {
       this._subs.push(
-        this.quesService.saveTest(this.data).subscribe(res => {
+        this.quesService.saveTest(this.data, this.email).subscribe(res => {
           if (!!res && !!res['sessionId']) {
             // TODO: Instead of a dialog, present text directly on the next of the button
             //       and also show "copy" button.  Similar to goo.gl url shortner.

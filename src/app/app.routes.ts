@@ -7,7 +7,6 @@ import { InterviewComponent } from './interview/interview.component';
 import {
   AdminComponent,
   DashboardComponent,
-  DashboardDetailsComponent,
   QuestionMakerComponent
 } from './admin/index';
 
@@ -18,8 +17,7 @@ export const appRoutes: Routes = [
     component: AdminComponent,
     children: [
       { path: '', component: QuestionMakerComponent },
-      { path: 'view', component: DashboardComponent },
-      { path: 'view/:id', component: DashboardDetailsComponent }
+      { path: 'view', component: DashboardComponent }
     ]
   },
   { path: 'login', component: LoginComponent },
