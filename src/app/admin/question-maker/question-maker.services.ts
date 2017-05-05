@@ -11,21 +11,13 @@ export class QuestionMakerService {
 
   }
 
-  getQuestions(setId: string) {
-    return httpRequest(this.http, {
-      url: '/api/admin/question',
-      method: RequestMethod.Get,
-      search: setId
-    });
-  }
-
-  saveTest(test, user = null) {
+  saveTest(test, token) {
     return httpRequest(this.http, {
       url: '/api/admin/question',
       method: RequestMethod.Post,
       body: {
         test: test,
-        user: user
+        token: token
       }
     });
   }

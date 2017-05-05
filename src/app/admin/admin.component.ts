@@ -24,8 +24,8 @@ export class AdminComponent implements OnInit {
   }
 
   logout() {
+    // TODO: Reset socket IO connection.
     this.authService.logout()
-      .then(_ => this.authService.destroySession())
       .then(_ => this.router.navigate(['login']));
   }
 }

@@ -32,8 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._subs.push(
       this.af.auth.subscribe(res => {
-        if (!!res) {
-          this.authService.saveSession(res.auth);
+        if (res) {
           this.router.navigateByUrl('/admin');
         }
       })

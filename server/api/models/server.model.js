@@ -14,20 +14,20 @@ class ServerModel {
     Object.seal(this);
   }
 
-  newSession(test, user) {
-    let sessionId = this.getNewSessionId();
-
-    // TODO: We need to validate `test` first.
-    let session = new Session(test.problem, user);
+  newSession(test, uid) {
+    // TODO: Validate `test` and `uid`.
+    let session = new Session(test.problem, uid);
     session.start();
 
+    let sessionId = this.getNewSessionId();
     this.sessions[sessionId] = session;
     return sessionId;
   }
 
-  getSessions(user) {
+  getSessions(uid) {
+    // TODO: Validate `uid`.
     const sessions = _.reduce(this.sessions, (acc, val, key) => {
-      if (val['createdByUser'] == user) {
+      if (val['creatorUid'] == uid) {
         acc[key] = {
           'id': key,
           'problems': val.problems,

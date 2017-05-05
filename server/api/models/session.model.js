@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = class Session {
-  constructor(problems, user = null) {
+  constructor(problems, uid) {
     this.problems = problems;
     // this.answers = [[], [], [], ... []] where the length is the length of
     // problems.
@@ -9,7 +9,7 @@ module.exports = class Session {
     this.problemStartedTime = undefined;
     this.problemIndex = undefined;
     this.isTestFinished = undefined;
-    this.createdByUser = user || undefined;
+    this.creatorUid = uid;
     this.updateTimeout = undefined;
     this.socket = undefined;
     Object.seal(this);

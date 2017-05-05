@@ -2,21 +2,25 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
+import { AuthService } from '../../login/login.services';
+
 import * as io from 'socket.io-client';
 
 declare const window: any;
 
+@Injectable()
 export class DashboardService {
 
   private url = window.location.origin;
   private socket: any;
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
-  getSessionList(email: string) {
+  getSessionList() {
+    // TODO: This will create a connection every call, factor the connection part out.
     return new Observable(observer => {
       this.socket = io(this.url, {
-        query: `user=${email}`,
+        query: `token=` + this.authService.getToken(),
         reconnection: true
       });
 

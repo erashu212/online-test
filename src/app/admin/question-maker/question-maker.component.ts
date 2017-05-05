@@ -86,7 +86,7 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   generateInterviewURL() {
     if (!_.isEmpty(this.data)) {
       this._subs.push(
-        this.quesService.saveTest(this.data, this.email).subscribe(res => {
+        this.quesService.saveTest(this.data, this.authService.getToken()).subscribe(res => {
           if (!!res && !!res['sessionId']) {
             // TODO: Instead of a dialog, present text directly on the next of the button
             //       and also show "copy" button.  Similar to goo.gl url shortner.

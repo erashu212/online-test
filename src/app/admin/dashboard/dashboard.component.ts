@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this._subs.push(
       this.authService.getUserEmail().subscribe((email: string) => {
-        this.dashboardService.getSessionList(email).subscribe((res: Array<any>) => {
+        this.dashboardService.getSessionList().subscribe((res: Array<any>) => {
           this.sessions = res;
         });
       })

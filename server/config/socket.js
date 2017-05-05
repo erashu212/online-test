@@ -1,17 +1,24 @@
 "use strict";
 
 const serverModel = require('../api/models/server.model');
+const firebaseAuth = require('../firebase.auth');
 
 module.exports = {
   socket: (io) => {
 
     io.on('connection', (socket) => {
-      let { id: sessionId, user } = socket.handshake.query;
+      let { id: sessionId, token } = socket.handshake.query;
 
-      if (user) {
-        let sessions = serverModel.getSessions(user);
-
-        socket.emit('setSessionList', sessions);
+      if (token) {
+        firebaseAuth.verifyIdToken(token)
+          .then((decodedToken) => {
+            const sessions = serverModel.getSessions(decodedToken.uid);
+            // TODO: Change from push to pull API, i.e., `getSessionList`.
+            socket.emit('setSessionList', sessions);
+          }).catch((error) => {
+            console.log(error);
+            // TODO: Handle error
+          });
       }
       else if (sessionId) {
         initTestTakerSetup(socket, sessionId);

@@ -1,12 +1,10 @@
 "use strict";
 
-const AdminRoute = require('../api/routes/admin.route');
 const QuestionRoute = require('../api/routes/question.route');
 
 module.exports = class Routes {
     static init(app, router) {
 
-        AdminRoute.init(app, router);
         QuestionRoute.init(app, router);
 
         /*eslint-disable */
