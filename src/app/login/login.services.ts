@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestMethod } from '@angular/http';
 
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 import 'rxjs/add/operator/toPromise';
 
 import { AngularFire, AuthProviders, AuthMethods, FirebaseAuthState } from 'angularfire2';
@@ -11,31 +14,24 @@ import { httpRequest } from '../shared/services/httpRequest';
 
 @Injectable()
 export class AuthService {
+  readonly token$: Observable<string>;
+  readonly email$: Observable<string>;
+  token: string;
 
-  private authState: FirebaseAuthState;
-  private token: string;
-
-  constructor(private af: AngularFire, private http: Http) {
-    this.af.auth.subscribe((state: FirebaseAuthState) => {
-      this.authState = state;
+  // TODO: We only use AngularFireAuth here, maybe we should import that directly instead of
+  //       AngularFire?
+  constructor(private af: AngularFire) {
+    this.token$ = this.af.auth.concatMap((state: FirebaseAuthState) => {
       if (state) {
-        state.auth.getToken(false).then(
-          token => {
-            this.token = token;
-          }
-        );
+        // TODO: What should we do for token expiration and refresh?
+        return state.auth.getToken(false);
       } else {
-        this.token = null;
-      }
+        return Promise.resolve(null);
+      };
     });
-  }
+    this.token$.subscribe(token => this.token = token);
 
-  getToken() {
-    return this.token;
-  }
-
-  getUserEmail() {
-    return this.af.auth.map(user => _.get(user, `auth.email`));
+    this.email$ = this.af.auth.map(user => _.get(user, `auth.email`));
   }
 
   logout() {

@@ -7,26 +7,19 @@ module.exports = {
   socket: (io) => {
 
     io.on('connection', (socket) => {
-      let { id: sessionId, token } = socket.handshake.query;
+      const query = socket.handshake.query;
 
-      if (token) {
-        firebaseAuth.verifyIdToken(token)
-          .then((decodedToken) => {
-            const sessions = serverModel.getSessions(decodedToken.uid);
-            // TODO: Change from push to pull API, i.e., `getSessionList`.
-            socket.emit('setSessionList', sessions);
-          }).catch((error) => {
-            console.log(error);
-            // TODO: Handle error
-          });
+      switch (query.client_type) {
+        case 'test_taker':
+          initTestTakerSetup(socket, query.id);
+          break;
+        case 'admin':
+          initAdminSetup(socket);
+          break;
+        default:
+          // TODO: Error handling.  Maybe send error msg and disconnect?
+          console.error('Invalid client_type for SocketJS connection:', client_type);
       }
-      else if (sessionId) {
-        initTestTakerSetup(socket, sessionId);
-      }
-      else {
-        return;
-      }
-
     });
     return io;
   }
@@ -63,5 +56,38 @@ function initTestTakerSetup(socket, sessionId) {
 
   socket.on('disconnect', () => {
     session.clientDisconnected();
+  });
+}
+
+function initAdminSetup(socket) {
+  // TODO: Check if token is expired.
+  let uid = null;
+
+  socket.on('updateToken', (token) => {
+    firebaseAuth.verifyIdToken(token)
+      .then((decodedToken) => {
+        uid = decodedToken.uid;
+      }).catch((error) => {
+        uid = null;
+        // TODO: error handling.  Maybe send an error msg or request a new token?
+        console.error(token, error);
+      });
+  });
+
+  socket.on('getSessionList', (callbackFn) => {
+    if (!uid) {
+      // TODO: error handling.
+      return;
+    }
+    callbackFn(serverModel.getSessions(uid));
+  });
+
+  socket.on('createSession', (testJson, callbackFn) => {
+    if (!uid) {
+      // TODO: error handling.
+      return;
+    }
+    const sessionId = serverModel.newSession(testJson, uid);
+    callbackFn(sessionId);
   });
 }

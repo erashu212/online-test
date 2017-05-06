@@ -51,7 +51,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
       .subscribe(id => {
         if (!!id) {
           this.socket = io.connect(window.location.origin, {
-            query: `id=${id}`,
+            query: `client_type=test_taker&id=${id}`,
             reconnection: true
           });
 

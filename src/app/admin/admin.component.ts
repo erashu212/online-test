@@ -20,7 +20,7 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.email$ = this.authService.getUserEmail();
+    this.email$ = this.authService.email$;
   }
 
   logout() {

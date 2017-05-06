@@ -11,7 +11,7 @@ import { Converter } from 'showdown/dist/showdown';
 
 import * as fossilDelta from 'fossil-delta';
 
-import { DashboardService } from './dashboard.service';
+import { AdminServerApiService } from '../admin.server.api.service';
 import { AuthService } from '../../login/login.services';
 
 declare const window: any;
@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private _subs: Array<Subscription> = [];
 
   constructor(
-    private dashboardService: DashboardService,
+    private adminServerApiService: AdminServerApiService,
     private authService: AuthService,
     public sanitizer: DomSanitizer
   ) { }
@@ -39,13 +39,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.converter = new Converter();
 
-    this._subs.push(
-      this.authService.getUserEmail().subscribe((email: string) => {
-        this.dashboardService.getSessionList().subscribe((res: Array<any>) => {
-          this.sessions = res;
-        });
-      })
-    );
+    // TODO: Update using observable.
+    this.adminServerApiService.getSessionList().then((sessions: Array<any>) => {
+      this.sessions = sessions;
+    });
   }
 
   ngOnDestroy() {

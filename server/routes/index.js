@@ -1,11 +1,8 @@
 "use strict";
 
-const QuestionRoute = require('../api/routes/question.route');
-
+// TODO: Review and cleanup.
 module.exports = class Routes {
     static init(app, router) {
-
-        QuestionRoute.init(app, router);
 
         /*eslint-disable */
         app.use((req, res, next) => {
