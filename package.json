@@ -37,6 +37,7 @@
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "firebase": "^3.9.0",
+    "firebase-admin": "^4.2.1",
     "firebaseui": "^1.0.1",
     "firebaseui-angular": "^0.1.5",
     "fossil-delta": "^0.2.5",
