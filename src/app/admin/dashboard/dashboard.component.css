@@ -1,0 +1,19 @@
+md-sidenav-container {
+  min-height: 300px;
+  height: 100%;
+}
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.no-style {
+  list-style-type: none;
+  margin: 0;
+  padding: 0
+}
+
+.example-sidenav {
+  padding: 20px;
+}

@@ -5,12 +5,15 @@ import { MaterialModule, MdButtonModule } from '@angular/material';
 
 import { AceEditorModule } from 'ng2-ace-editor';
 
-import { QuestionMakerComponent, QuestionMakerService } from './question-maker/index';
+import { QuestionMakerComponent } from './question-maker/index';
+import { DashboardComponent } from './dashboard/index';
 import { AdminComponent } from './admin.component';
+import { AdminServerApiService } from './admin.server.api.service';
 
 @NgModule({
   declarations: [
     AdminComponent,
+    DashboardComponent,
     QuestionMakerComponent
   ],
   imports: [
@@ -25,7 +28,7 @@ import { AdminComponent } from './admin.component';
     QuestionMakerComponent
   ],
   providers: [
-    QuestionMakerService
+    AdminServerApiService
   ]
 })
 export class AdminModule { }

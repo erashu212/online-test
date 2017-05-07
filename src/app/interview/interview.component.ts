@@ -6,8 +6,12 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { MdSnackBar } from '@angular/material';
 
+import 'brace/theme/chrome';
+
 import * as io from 'socket.io-client';
 import { Converter } from 'showdown/dist/showdown';
+
+import * as fossilDelta from 'fossil-delta';
 
 import { DialogsService } from '../shared/components/confirm-dialog';
 
@@ -23,6 +27,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
   isFinished = false;
   questionHtml: string;
   remainingTime: Date;
+  previousAnswerText = '';
 
   private socket: any;
   private converter: Converter;
@@ -45,8 +50,8 @@ export class InterviewComponent implements OnInit, OnDestroy {
       .map(p => p['id'])
       .subscribe(id => {
         if (!!id) {
-          this.socket = io.connect('http://localhost:4200', {
-            query: `id=${id}`,
+          this.socket = io.connect(window.location.origin, {
+            query: `client_type=test_taker&id=${id}`,
             reconnection: true
           });
 
@@ -64,6 +69,7 @@ export class InterviewComponent implements OnInit, OnDestroy {
 
           this.socket.on('setQuestion', (questionToml: string) => {
             this.wasRemainingTimeSnackbarShown = false;
+            this.previousAnswerText = '';
             // dismiss confirmation dialog
             this.dialogService.close();
 
@@ -94,9 +100,11 @@ export class InterviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAnswerTextChange() {
+  onAnswerTextUpdate(answer: string) {
     // TODO: Create diff and call server.
-    // this.socket.emit('answerTextUpdate', diff);
+    const diff = fossilDelta.create(this.previousAnswerText, answer);
+    this.previousAnswerText = answer;
+    this.socket.emit('answerTextUpdate', diff);
   }
 
   getNextQuestion() {

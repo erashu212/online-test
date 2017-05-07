@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { InterviewComponent } from './interview/interview.component';
 import {
   AdminComponent,
+  DashboardComponent,
   QuestionMakerComponent
 } from './admin/index';
 
@@ -15,7 +16,8 @@ export const appRoutes: Routes = [
     canActivate: [ AuthGuard ],
     component: AdminComponent,
     children: [
-      { path: '', component: QuestionMakerComponent }
+      { path: '', component: QuestionMakerComponent },
+      { path: 'view', component: DashboardComponent }
     ]
   },
   { path: 'login', component: LoginComponent },

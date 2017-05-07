@@ -1,0 +1,32 @@
+<md-sidenav-container>
+  <md-sidenav mode="side" opened="true" class="example-sidenav">
+    <h3>Session List</h3>
+    <ul class="no-style">
+      <li *ngFor="let session of sessions; let idx = index;">
+        <md-button-toggle (click)="sessionProblem = session;">
+          {{idx + 1}} {{session?.isTestFinished ? '' : 'In Progress ...'}}
+        </md-button-toggle>
+      </li>
+    </ul>
+  </md-sidenav>
+  <div class="example-sidenav-content">
+    <md-card style="height:100%; width:100%; box-sizing: border-box; margin-left:2px;" 
+    *ngIf="!!sessionProblem">
+      <md-card-content>
+        <div *ngFor="let problem of sessionProblem?.problems; let idx = index">
+          <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem.question))>
+          </div>
+          <ng-container *ngIf="!!problem.answers && problem.answers.length > 0">
+            <div *ngFor="let answer of problem.answers[idx]; let ansIndex = index;">
+              <ace-editor [autoUpdateContent]="true" [text]="showAnswer(answer[ansIndex].diff)" [theme]="'chrome'" [readOnly]="true" style="min-height: 200px;height:100%;width:100%;">
+              </ace-editor>
+            </div>
+            <div>
+              <button md-raised-button color="primary" (click)="ansIndex = ansIndex + 1">Next</button>
+            </div>
+            </ ng-container>
+        </div>
+      </md-card-content>
+    </md-card>
+  </div>
+</md-sidenav-container>

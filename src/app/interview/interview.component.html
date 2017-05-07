@@ -20,9 +20,15 @@
   </md-card-title>
 
   <md-card-content>
-     <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(questionHtml)>
-     </div>
-     <button md-raised-button color="primary" (click)="getNextQuestion($event)">Next</button>
+    <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(questionHtml)>
+    </div>
+    <button md-raised-button color="primary" (click)="getNextQuestion($event)">Next</button>
+  </md-card-content>
+  <md-card-content>
+    <ace-editor [autoUpdateContent]="true" [theme]="'chrome'"
+    (textChanged)="onAnswerTextUpdate($event);"
+     style="min-height: 200px;height:100%;width:100%;">
+    </ace-editor>
   </md-card-content>
 </md-card>
 

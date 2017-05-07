@@ -25,9 +25,10 @@ import * as _ from 'lodash';
 
 import { DialogsService } from '../../shared/components/confirm-dialog';
 
-import { QuestionMakerService } from './question-maker.services';
+import { AuthService } from '../../login/login.services';
+import { AdminServerApiService } from '../admin.server.api.service';
 
-declare const showdown: any;
+declare const showdown: any, window: any;
 
 @Component({
   selector: 'app-question-maker',
@@ -47,16 +48,22 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   public isInvalidTOML = false;
   public parseError = null;
   private _subs: Array<Subscription> = [];
+  private email: string;
 
   constructor(
     private dialog: MdDialog,
-    private quesService: QuestionMakerService,
     public sanitizer: DomSanitizer,
-    private dialogService: DialogsService
+    private dialogService: DialogsService,
+    private authService: AuthService,
+    private adminServerApiService: AdminServerApiService
   ) { }
 
   ngOnInit() {
     this.converter = new Converter();
+
+    this._subs.push(
+      this.authService.email$.subscribe((email: string) => this.email = email)
+    );
   }
 
   ngOnDestroy() {
@@ -77,17 +84,13 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   }
 
   generateInterviewURL() {
-    if (!_.isEmpty(this.data)) {
-      this._subs.push(
-        this.quesService.saveTest(this.data).subscribe(res => {
-          if (!!res && !!res['sessionId']) {
-            // TODO: Instead of a dialog, present text directly on the next of the button
-            //       and also show "copy" button.  Similar to goo.gl url shortner.
-            this.dialogService.confirm('URL', `http://localhost:4200/test/${res.sessionId}`);
-          }
-        })
-      );
-    }
+    // TODO: User shouldn't be able to click the button if `this.data` is not valid.
+    //       Disable the button if `this.data` is not valid.
+    this.adminServerApiService.createSession(this.data).then(
+      sessionId => {
+        this.dialogService.confirm('URL', `${window.location.origin}/test/${sessionId}`);
+      }
+    );
   }
 
   private parseTOML(term: string) {

@@ -21,6 +21,11 @@ Node.js 6.9 or later
 npm install
 ```
 
+### Configuration
+Save your Firebase service account's json key at `server/firebase.admin.credential.json`.  Please refer to https://firebase.google.com/docs/admin/setup for obtaining private key file.
+
+Update `./src/app/login/login.module.ts`'s `firebaseConfig` variable to your Firebase client config.  Update `server/firebase.auth.js`'s `databaseURL` to your Firebase client config's `databaseURL`.  Please refer to https://firebase.google.com/docs/web/setup for obtaining Firebase client config.
+
 ### Start
  ```
  npm run start.client (to start client only)
