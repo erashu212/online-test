@@ -18,7 +18,7 @@ module.exports = {
           break;
         default:
           // TODO: Error handling.  Maybe send error msg and disconnect?
-          console.error('Invalid client_type for SocketJS connection:', client_type);
+          console.error('Invalid client_type for SocketJS connection:', query.client_type);
       }
     });
     return io;
