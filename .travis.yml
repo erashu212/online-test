@@ -13,7 +13,7 @@ cache:
 
 script:
   - npm run build.prod
-  - ng lint
+  - ./node_modules/.bin/tsc
   - npm run lint
 
 notifications:
