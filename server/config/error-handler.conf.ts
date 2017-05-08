@@ -3,7 +3,7 @@
 const errorHandler = require('errorhandler');
 
 module.exports = class ErrorHandler {
-  static init(app) {
+  static init(app: any) {
     app.use(errorHandler());
   }
 }

@@ -1,14 +1,14 @@
 "use strict";
 
 const bodyParser = require('body-parser');
-const express = require('express');
+import express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 const cors = require('cors');
 
 module.exports = class RouteConfig {
-  static init(application) {
+  static init(application: any) {
 
     application.use(express.static(process.cwd() + '/dist'));
     application.use(bodyParser.urlencoded({ extended: true }));

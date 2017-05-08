@@ -1,7 +1,16 @@
 'use strict';
 
 module.exports = class Session {
-  constructor(problems, uid) {
+  private problems: any;
+  private answers: any;
+  private problemStartedTime: any;
+  private problemIndex: any;
+  private isTestFinished: any;
+  private creatorUid: string;
+  private updateTimeout: any;
+  private socket: any;
+
+  constructor(problems: any, uid: string) {
     this.problems = problems;
     // this.answers = [[], [], [], ... []] where the length is the length of
     // problems.
@@ -24,7 +33,7 @@ module.exports = class Session {
 
   // Set client socket to notify updates.
   // If a client is already connected, reject and returns false.
-  clientConnected(socket) {
+  clientConnected(socket: any) {
     if (this.socket) {
       return false;
     }
@@ -65,7 +74,7 @@ module.exports = class Session {
     this._update();
   }
 
-  answerTextUpdate(diff) {
+  answerTextUpdate(diff: string) {
     this.answers[this.problemIndex].push([new Date(), diff]);
   }
 
@@ -76,7 +85,7 @@ module.exports = class Session {
   getRemainingTimeMs() {
     const currentTime = new Date();
     const problemTimeLimitMs = this.getProblem().time_limit * 1000;
-    const elapsedTimeMs = currentTime - this.problemStartedTime;
+    const elapsedTimeMs = currentTime.getTime() - this.problemStartedTime;
     return problemTimeLimitMs - elapsedTimeMs;
   }
 

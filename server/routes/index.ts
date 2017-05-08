@@ -2,10 +2,10 @@
 
 // TODO: Review and cleanup.
 module.exports = class Routes {
-    static init(app, router) {
+    static init(app: any, router: any) {
 
         /*eslint-disable */
-        app.use((req, res, next) => {
+        app.use((req: any, res: any, next: any) => {
             if (req.url.match(/\/api\/*/g)) {
                 next();
             }

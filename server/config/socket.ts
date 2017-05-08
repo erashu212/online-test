@@ -4,9 +4,9 @@ const serverModel = require('../api/models/server.model');
 const firebaseAuth = require('../firebase.auth');
 
 module.exports = {
-  socket: (io) => {
+  socket: (io: any) => {
 
-    io.on('connection', (socket) => {
+    io.on('connection', (socket: any) => {
       const query = socket.handshake.query;
 
       switch (query.client_type) {
@@ -25,7 +25,7 @@ module.exports = {
   }
 }
 
-function initTestTakerSetup(socket, sessionId) {
+function initTestTakerSetup(socket: any, sessionId: string) {
   const session = serverModel.getSession(sessionId);
 
   if (!session) {
@@ -50,7 +50,7 @@ function initTestTakerSetup(socket, sessionId) {
     session.next();
   });
 
-  socket.on('answerTextUpdate', (diff) => {
+  socket.on('answerTextUpdate', (diff: string) => {
     session.answerTextUpdate(diff);
   })
 
@@ -59,22 +59,22 @@ function initTestTakerSetup(socket, sessionId) {
   });
 }
 
-function initAdminSetup(socket) {
+function initAdminSetup(socket: any) {
   // TODO: Check if token is expired.
-  let uid = null;
+  let uid: string = '';
 
-  socket.on('updateToken', (token) => {
+  socket.on('updateToken', (token: string) => {
     firebaseAuth.verifyIdToken(token)
-      .then((decodedToken) => {
+      .then((decodedToken: any) => {
         uid = decodedToken.uid;
-      }).catch((error) => {
-        uid = null;
+      }).catch((error: any) => {
+        uid = '';
         // TODO: error handling.  Maybe send an error msg or request a new token?
         console.error(token, error);
       });
   });
 
-  socket.on('getSessionList', (callbackFn) => {
+  socket.on('getSessionList', (callbackFn: any) => {
     if (!uid) {
       // TODO: error handling.
       return;
@@ -82,7 +82,7 @@ function initAdminSetup(socket) {
     callbackFn(serverModel.getSessions(uid));
   });
 
-  socket.on('createSession', (testJson, callbackFn) => {
+  socket.on('createSession', (testJson: any, callbackFn: any) => {
     if (!uid) {
       // TODO: error handling.
       return;

@@ -32,7 +32,7 @@ ErrorHandler.init(app);
 
 Routes.init(app, express.Router());
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function (err: any) {
   // handle the error safely
   DBConfig.close();
   console.log(err)

@@ -1,11 +1,15 @@
 'use strict';
 
-const crypto = require('crypto');
+import crypto = require('crypto');
 const _ = require('lodash');
 
 const Session = require('../models/session.model');
 
 class ServerModel {
+  private sessions: any;
+  private sessionIdCounter: number;
+  private sessionIdGeneratorKey: Buffer;
+
   constructor() {
     this.sessions = {};
     this.sessionIdCounter = 0;
@@ -14,7 +18,7 @@ class ServerModel {
     Object.seal(this);
   }
 
-  newSession(test, uid) {
+  newSession(test: any, uid: string) {
     // TODO: Validate `test` and `uid`.
     let session = new Session(test.problem, uid);
     session.start();
@@ -24,9 +28,9 @@ class ServerModel {
     return sessionId;
   }
 
-  getSessions(uid) {
+  getSessions(uid: string) {
     // TODO: Validate `uid`.
-    const sessions = _.reduce(this.sessions, (acc, val, key) => {
+    const sessions = _.reduce(this.sessions, (acc: any, val: any, key: any) => {
       if (val['creatorUid'] == uid) {
         acc[key] = {
           'id': key,
@@ -43,7 +47,7 @@ class ServerModel {
     return _.values(sessions);
   }
 
-  getSession(sessionId) {
+  getSession(sessionId: string) {
     return this.sessions[sessionId];
   }
 
@@ -57,7 +61,7 @@ class ServerModel {
     return sessionId;
   }
 
-  isSessionIdValid(sessionId) {
+  isSessionIdValid(sessionId: string) {
     const decipher = crypto.createDecipher(
       'AES-256-CBC-HMAC-SHA256', this.sessionIdGeneratorKey);
     try {
