@@ -4,9 +4,9 @@ const serverModel = require('../api/models/server.model');
 const firebaseAuth = require('../firebase.auth');
 
 module.exports = {
-  socket: (io: any) => {
+  socket: (io: SocketIO.Server) => {
 
-    io.on('connection', (socket: any) => {
+    io.on('connection', (socket: SocketIO.Socket) => {
       const query = socket.handshake.query;
 
       switch (query.client_type) {
@@ -25,7 +25,7 @@ module.exports = {
   }
 }
 
-function initTestTakerSetup(socket: any, sessionId: string) {
+function initTestTakerSetup(socket: SocketIO.Socket, sessionId: string) {
   const session = serverModel.getSession(sessionId);
 
   if (!session) {
@@ -59,7 +59,7 @@ function initTestTakerSetup(socket: any, sessionId: string) {
   });
 }
 
-function initAdminSetup(socket: any) {
+function initAdminSetup(socket: SocketIO.Socket) {
   // TODO: Check if token is expired.
   let uid: string = '';
 

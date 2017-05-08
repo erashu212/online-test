@@ -9,7 +9,8 @@ const express = require('express');
 
 const app = express();
 
-const socket = require('socket.io');
+import * as socketIo from "socket.io";
+
 
 const RoutesConfig = require('./config/routes.conf');
 const DBConfig = require('./config/db.conf');
@@ -22,7 +23,7 @@ let server = http.createServer(app)
     console.log(`enviroment: ${process.env.NODE_ENV || 'Dev'}`);
   });
 
-let ios = socket.listen(server);
+const ios = socketIo.listen(server);
 
 require('./config/socket').socket(ios);
 

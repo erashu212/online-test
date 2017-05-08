@@ -3,12 +3,12 @@
 module.exports = class Session {
   private problems: any;
   private answers: any;
-  private problemStartedTime: any;
-  private problemIndex: any;
-  private isTestFinished: any;
+  private problemStartedTime?: Date;
+  private problemIndex: number;
+  private isTestFinished?: boolean;
   private creatorUid: string;
-  private updateTimeout: any;
-  private socket: any;
+  private updateTimeout?: number;
+  private socket: SocketIO.Socket | undefined;
 
   constructor(problems: any, uid: string) {
     this.problems = problems;
@@ -16,7 +16,7 @@ module.exports = class Session {
     // problems.
     this.answers = [...Array(problems.length)].map(() => []);
     this.problemStartedTime = undefined;
-    this.problemIndex = undefined;
+    this.problemIndex = -1;
     this.isTestFinished = undefined;
     this.creatorUid = uid;
     this.updateTimeout = undefined;
@@ -26,14 +26,13 @@ module.exports = class Session {
 
   start() {
     this.problemStartedTime = new Date();
-    this.problemIndex = -1;
     this.isTestFinished = false;
     this.next();
   }
 
   // Set client socket to notify updates.
   // If a client is already connected, reject and returns false.
-  clientConnected(socket: any) {
+  clientConnected(socket: SocketIO.Socket) {
     if (this.socket) {
       return false;
     }
@@ -48,7 +47,7 @@ module.exports = class Session {
   }
 
   // Send the session state to client.
-  updateClient() {
+  private updateClient() {
     if (this.socket) {
       if (this.isTestFinished) {
         this.socket.emit('setTestFinished');
@@ -83,20 +82,30 @@ module.exports = class Session {
   }
 
   getRemainingTimeMs() {
+    if (!this.problemStartedTime) {
+      return undefined;
+    }
     const currentTime = new Date();
     const problemTimeLimitMs = this.getProblem().time_limit * 1000;
-    const elapsedTimeMs = currentTime.getTime() - this.problemStartedTime;
+    const elapsedTimeMs = currentTime.getTime() - this.problemStartedTime.getTime();
     return problemTimeLimitMs - elapsedTimeMs;
   }
 
-  _update() {
-    clearTimeout(this.updateTimeout);
+  private _update() {
+    if (!this.problemStartedTime) {
+      return;
+    }
+
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+      this.updateTimeout = undefined;
+    }
 
     if (this.isTestFinished) {
       return;
     }
 
-    if (this.getRemainingTimeMs() <= 0) {
+    if (<number>this.getRemainingTimeMs() <= 0) {
       this.next();
     }
 
