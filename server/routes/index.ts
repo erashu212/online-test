@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // TODO: Review and cleanup.
 module.exports = class Routes {
@@ -7,8 +7,7 @@ module.exports = class Routes {
         app.use((req: any, res: any, next: any) => {
             if (req.url.match(/\/api\/*/g)) {
                 next();
-            }
-            else {
+            } else {
                 res.sendFile(process.cwd() + '/dist/index.html');
             }
         });

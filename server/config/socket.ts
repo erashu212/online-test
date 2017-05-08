@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const serverModel = require('../api/models/server.model');
 const firebaseAuth = require('../firebase.auth');
@@ -61,7 +61,7 @@ function initTestTakerSetup(socket: SocketIO.Socket, sessionId: string) {
 
 function initAdminSetup(socket: SocketIO.Socket) {
   // TODO: Check if token is expired.
-  let uid: string = '';
+  let uid = '';
 
   socket.on('updateToken', (token: string) => {
     firebaseAuth.verifyIdToken(token)

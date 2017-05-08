@@ -14,7 +14,7 @@ cache:
 script:
   - npm run build.prod
   - ng lint
-  - npm run server.lint
+  - npm run lint
 
 notifications:
   email:

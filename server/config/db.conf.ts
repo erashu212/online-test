@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
 const sqlite3 = require('sqlite3').verbose();
 
-const FILE_NAME = "test.db";
+const FILE_NAME = 'test.db';
 
 module.exports = class DBConfig {
   static init() {
-    let db = new sqlite3.Database(FILE_NAME);
+    const db = new sqlite3.Database(FILE_NAME);
     db.on('error', console.error.bind(console, 'An error ocurred with the DB connection: '));
   }
 
