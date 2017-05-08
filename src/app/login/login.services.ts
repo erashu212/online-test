@@ -6,7 +6,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import 'rxjs/add/operator/toPromise';
 
-import { AngularFire, AuthProviders, AuthMethods, FirebaseAuthState } from 'angularfire2';
+import * as firebase from 'firebase/app';
+import { AngularFireAuth } from 'angularfire2/auth';
+
 import * as _ from 'lodash';
 import { httpRequest } from '../shared/services/httpRequest';
 
@@ -20,21 +22,23 @@ export class AuthService {
 
   // TODO: We only use AngularFireAuth here, maybe we should import that directly instead of
   //       AngularFire?
-  constructor(private af: AngularFire) {
-    this.token$ = this.af.auth.concatMap((state: FirebaseAuthState) => {
-      if (state) {
+  constructor(private afAuth: AngularFireAuth) {
+    this.token$ = this.afAuth.authState.concatMap((user: firebase.User) => {
+      if (user) {
         // TODO: What should we do for token expiration and refresh?
-        return state.auth.getToken(false);
+        return user.getToken(false);
       } else {
         return Promise.resolve(null);
       };
     });
     this.token$.subscribe(token => this.token = token);
 
-    this.email$ = this.af.auth.map(user => _.get(user, `auth.email`));
+    this.email$ = this.afAuth.authState.map(user => {
+      return user? user.email : undefined;
+    });
   }
 
   logout() {
-    return this.af.auth.logout();
+    return this.afAuth.auth.signOut();
   }
 }

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { FirebaseAuthState, AngularFire } from 'angularfire2';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AuthService } from './login.services';
 
@@ -24,14 +24,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _subs: Array<Subscription> = [];
 
   constructor(
-    private af: AngularFire,
+    private afAuth: AngularFireAuth,
     private authService: AuthService,
     private router: Router
   ) { }
 
   ngOnInit() {
     this._subs.push(
-      this.af.auth.subscribe(res => {
+      this.afAuth.authState.subscribe(res => {
         if (res) {
           this.router.navigateByUrl('/admin');
         }
