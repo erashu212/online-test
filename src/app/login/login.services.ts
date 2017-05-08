@@ -34,7 +34,7 @@ export class AuthService {
     this.token$.subscribe(token => this.token = token);
 
     this.email$ = this.afAuth.authState.map(user => {
-      return user? user.email : undefined;
+      return user ? user.email : undefined;
     });
   }
 
