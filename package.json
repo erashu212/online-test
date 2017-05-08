@@ -9,7 +9,6 @@
     "start.client": "ng serve",
     "start.server": "./node_modules/.bin/ts-node --debug-brk ./server/index",
     "start": "npm run build.prod && ./node_modules/.bin/ts-node --debug-brk ./server/index",
-    "server.lint": "./node_modules/.bin/eslint server/.",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./server/index.ts"
   },
   "private": true,
@@ -64,7 +63,6 @@
     "@types/showdown": "^1.4.32",
     "@types/socket.io": "^1.4.27",
     "codelyzer": "^3.0.0",
-    "eslint": "^3.19.0",
     "jasmine-core": "^2.6.0",
     "jasmine-spec-reporter": "^4.0.0",
     "karma": "^1.7.0",
