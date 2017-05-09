@@ -5,8 +5,8 @@ const firebaseAdminCredential = require("./firebase.admin.credential.json");
 
 const app = admin.initializeApp({
   credential: admin.credential.cert(firebaseAdminCredential),
-  // TODO: Read from a separate config file.
-  databaseURL: "https://online-test-dev.firebaseio.com"
+  // We are not setting databaseURL since we're not using database.
+  databaseURL: ''
 });
 
 module.exports = app.auth();
