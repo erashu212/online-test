@@ -24,7 +24,18 @@ npm install
 ### Configuration
 Save your Firebase service account's json key at `server/firebase.admin.credential.json`.  Please refer to https://firebase.google.com/docs/admin/setup for obtaining private key file.
 
-Update `./src/app/login/login.module.ts`'s `firebaseConfig` variable to your Firebase client config.  Please refer to https://firebase.google.com/docs/web/setup for obtaining Firebase client config.
+Save your Firebase client config key as `firebaseConfig` export variable at `src/firebase.config.ts`.  For example,
+```typescript
+export const firebaseConfig = {
+    apiKey: "...",
+    authDomain: "...",
+    databaseURL: "...",
+    projectId: "...",
+    storageBucket: "...",
+    messagingSenderId: "..."
+};
+```
+Please refer to https://firebase.google.com/docs/web/setup for obtaining Firebase client config.
 
 ### Start
  ```

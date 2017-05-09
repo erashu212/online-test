@@ -48,5 +48,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Private server keys
+# Firebase keys
+src/firebase.config.ts
 server/firebase.admin.credential.json

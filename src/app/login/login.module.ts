@@ -9,15 +9,7 @@ import { FirebaseUIAuthConfig, FirebaseUIModule, AuthProviders, AuthMethods } fr
 import { AuthService } from './login.services';
 import { LoginComponent } from './login.component';
 
-// TODO: Don't hardcode.  Read from a separate config file.
-const firebaseConfig = {
-  apiKey: 'AIzaSyCvxySSZGFj3NVSYFIhNsAYM37osHB4U-I',
-  authDomain: 'online-test-dev.firebaseapp.com',
-  databaseURL: 'https://online-test-dev.firebaseio.com',
-  projectId: 'online-test-dev',
-  storageBucket: 'online-test-dev.appspot.com',
-  messagingSenderId: '306736793870'
-};
+import { firebaseConfig } from '../../firebase.config';
 
 const firebaseUiAuthConfig: FirebaseUIAuthConfig = {
   providers: [
