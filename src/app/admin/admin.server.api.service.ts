@@ -33,7 +33,7 @@ export class AdminServerApiService {
   getSessionList() {
     return new Promise((resolve, reject) => {
       // TODO: Do we need timeout or error handling here?
-      this.socket.emit('getSessionList', (sessions) => {
+      this.socket.emit('getSessionList', (sessions: object) => {
         resolve(sessions);
       });
     });
@@ -42,7 +42,7 @@ export class AdminServerApiService {
   createSession(data: string) {
     return new Promise((resolve, reject) => {
       // TODO: Do we need timeout or error handling here?
-      this.socket.emit('createSession', data, (sessionId) => {
+      this.socket.emit('createSession', data, (sessionId: string) => {
         resolve(sessionId);
       });
     });

@@ -9,7 +9,7 @@ import { MdSnackBar } from '@angular/material';
 import 'brace/theme/chrome';
 
 import * as io from 'socket.io-client';
-import { Converter } from 'showdown/dist/showdown';
+import { Converter } from 'showdown';
 
 import * as fossilDelta from 'fossil-delta';
 
@@ -95,14 +95,13 @@ export class InterviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    while (this._subs.length) {
-      this._subs.pop().unsubscribe();
-    }
+    this._subs.forEach(subscription => subscription.unsubscribe());
   }
 
   onAnswerTextUpdate(answer: string) {
     // TODO: Create diff and call server.
-    const diff = fossilDelta.create(this.previousAnswerText, answer);
+    const diff = fossilDelta.create(Buffer.from(this.previousAnswerText, 'utf8'),
+                                    Buffer.from(answer, 'utf8'));
     this.previousAnswerText = answer;
     this.socket.emit('answerTextUpdate', diff);
   }

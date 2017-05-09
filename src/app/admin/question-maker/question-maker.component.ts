@@ -19,7 +19,7 @@ import { parse } from 'toml';
 import 'brace/theme/chrome';
 import 'brace/mode/toml';
 
-import { Converter } from 'showdown/dist/showdown';
+import { Converter } from 'showdown';
 
 import * as _ from 'lodash';
 
@@ -67,9 +67,7 @@ export class QuestionMakerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    while (this._subs.length) {
-      this._subs.pop().unsubscribe();
-    }
+    this._subs.forEach(subscription => subscription.unsubscribe());
   }
 
   @HostListener('window:beforeunload')

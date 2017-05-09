@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import * as io from 'socket.io-client';
-import { Converter } from 'showdown/dist/showdown';
+import { Converter } from 'showdown';
 import 'hammerjs';
 
 @Component({

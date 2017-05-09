@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'brace/theme/chrome';
 
 import * as io from 'socket.io-client';
-import { Converter } from 'showdown/dist/showdown';
+import { Converter } from 'showdown';
 
 import * as fossilDelta from 'fossil-delta';
 
@@ -46,12 +46,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    while (this._subs.length) {
-      this._subs.pop().unsubscribe();
-    }
+    this._subs.forEach(subscription => subscription.unsubscribe);
   }
 
-  showAnswer(diff) {
-    return fossilDelta.apply('', diff);
+  showAnswer(diff: number[]) {
+    return fossilDelta.apply([], diff);
   }
 }
