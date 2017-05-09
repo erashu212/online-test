@@ -1,6 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    // TODO: Turn on once https://github.com/fxmontigny/ng2-ace-editor/issues/41 is resolved.
+    // "strict": true,
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "baseUrl": "",
