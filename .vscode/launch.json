@@ -2,15 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach",
       "type": "node",
       "request": "attach",
-      "port": 5858,
-      "address": "localhost",
-      "restart": false,
-      "sourceMaps": false,
-      "localRoot": "${workspaceRoot}",
-      "remoteRoot": null
+      "name": "Attach to Port",
+      "port": 9229
     }
   ],
   "compounds": []

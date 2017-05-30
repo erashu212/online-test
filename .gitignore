@@ -50,4 +50,4 @@ Thumbs.db
 
 # Firebase keys
 src/firebase.config.ts
-server/firebase.admin.credential.json
+server/constants/firebase.admin.credential.json

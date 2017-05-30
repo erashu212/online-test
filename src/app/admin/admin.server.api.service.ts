@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { AuthService } from '../login/login.services';
 
@@ -14,6 +16,8 @@ export class AdminServerApiService {
   private url = window.location.origin;
   private socket: any;
 
+  unsubscribe$ = new Subject<any>();
+
   constructor(private authService: AuthService) {
     this.socket = io(this.url, {
         query: `client_type=admin`,
@@ -21,8 +25,9 @@ export class AdminServerApiService {
       });
 
       this.socket.on('connect', () => {
-        // TODO: unsubscribe.
-        this.authService.token$.subscribe(token => {
+        this.authService.token$
+        .takeUntil(this.unsubscribe$)
+        .subscribe(token => {
           if (token) {
             this.socket.emit('updateToken', token);
           }
@@ -46,5 +51,10 @@ export class AdminServerApiService {
         resolve(sessionId);
       });
     });
+  }
+
+  onDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

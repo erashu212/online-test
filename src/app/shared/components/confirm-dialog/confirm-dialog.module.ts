@@ -1,12 +1,12 @@
-import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
+import { MdDialogModule } from '@angular/material';
 
 import { DialogsService } from './confirm-dialog.service';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 
 @NgModule({
     imports: [
-        MaterialModule.forRoot(),
+        MdDialogModule,
     ],
     exports: [
         ConfirmDialogComponent,

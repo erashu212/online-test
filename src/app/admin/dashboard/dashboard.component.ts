@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
 
 import 'brace/theme/chrome';
 
@@ -24,11 +25,9 @@ declare const window: any;
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  sessions: Array<any>;
+  sessions$: Observable<any>;
   converter: Converter;
   sessionProblem: any;
-
-  private _subs: Array<Subscription> = [];
 
   constructor(
     private adminServerApiService: AdminServerApiService,
@@ -40,16 +39,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.converter = new Converter();
 
     // TODO: Update using observable.
-    this.adminServerApiService.getSessionList().then((sessions: Array<any>) => {
-      this.sessions = sessions;
-    });
+    this.sessions$ = Observable.fromPromise(this.adminServerApiService.getSessionList());
   }
 
   ngOnDestroy() {
-    this._subs.forEach(subscription => subscription.unsubscribe);
+    this.adminServerApiService.onDestroy();
   }
+  
 
-  showAnswer(diff: number[]) {
-    return fossilDelta.apply([], diff);
+  showAnswer(answer: any[]) {
+    let text: any = [];
+    for(let i = 0; i < answer.length; i++) {
+      text = fossilDelta.apply(text, answer[i][1]);
+    }
+    return text;
   }
 }
