@@ -1,7 +1,7 @@
 'use strict';
 
 const serverModel = require('../api/models/server.model');
-const firebaseAuth = require('../firebase.auth');
+const firebaseAuth = require('./firebase.auth');
 
 module.exports = {
   socket: (io: SocketIO.Server) => {

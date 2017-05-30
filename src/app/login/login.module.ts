@@ -9,7 +9,7 @@ import { FirebaseUIAuthConfig, FirebaseUIModule, AuthProviders, AuthMethods } fr
 import { AuthService } from './login.services';
 import { LoginComponent } from './login.component';
 
-import { firebaseConfig } from '../../firebase.config';
+import { FB_CONFIG } from '../../firebase.config';
 
 const firebaseUiAuthConfig: FirebaseUIAuthConfig = {
   providers: [
@@ -28,7 +28,7 @@ const firebaseUiAuthConfig: FirebaseUIAuthConfig = {
 @NgModule({
   declarations: [LoginComponent],
   imports: [
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(FB_CONFIG),
     CommonModule,
     FormsModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig)
