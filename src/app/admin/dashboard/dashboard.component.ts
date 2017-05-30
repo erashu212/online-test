@@ -45,13 +45,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.adminServerApiService.onDestroy();
   }
-  
 
   showAnswer(answer: any[]) {
     let text: any = [];
-    for(let i = 0; i < answer.length; i++) {
+    for (let i = 0; i < answer.length; i++) {
       text = fossilDelta.apply(text, answer[i][1]);
     }
-    return text;
+
+    return String.fromCharCode.apply(null, new Uint16Array(text));
   }
 }

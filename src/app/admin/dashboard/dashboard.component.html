@@ -15,11 +15,11 @@
       <md-card-content>
         <div *ngFor="let problem of sessionProblem?.problems; let idx = index">
           <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem?.question))
-          style="min-height: 200px;width:50%;">
+          style="min-height: 200px;width:30%;float:left;">
           </div>
           <ng-container *ngIf="!!sessionProblem?.answers && sessionProblem?.answers.length > 0">
             <ace-editor [autoUpdateContent]="true" [text]="showAnswer(sessionProblem?.answers[idx])" [theme]="'chrome'" [readOnly]="true"
-              style="min-height: 200px;width:50%;">
+              style="min-height: 200px;width:70%;">
             </ace-editor>
           </ng-container>
         </div>
