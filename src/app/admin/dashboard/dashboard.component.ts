@@ -23,7 +23,7 @@ declare const window: any;
     './dashboard.component.css'
   ]
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
 
   sessions$: Observable<any>;
   converter: Converter;
@@ -40,10 +40,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // TODO: Update using observable.
     this.sessions$ = Observable.fromPromise(this.adminServerApiService.getSessionList());
-  }
-
-  ngOnDestroy() {
-    this.adminServerApiService.onDestroy();
   }
 
   showAnswer(answer: any[]) {

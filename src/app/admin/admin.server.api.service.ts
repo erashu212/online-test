@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/takeUntil';
 
 import { AuthService } from '../login/login.services';
 
@@ -16,23 +14,20 @@ export class AdminServerApiService {
   private url = window.location.origin;
   private socket: any;
 
-  unsubscribe$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   constructor(private authService: AuthService) {
     this.socket = io(this.url, {
-        query: `client_type=admin`,
-        reconnection: true
-      });
+      query: `client_type=admin`,
+      reconnection: true
+    });
 
-      this.socket.on('connect', () => {
-        this.authService.token$
-        // .takeUntil(this.unsubscribe$)
+    this.socket.on('connect', () => {
+      this.authService.token$
         .subscribe(token => {
           if (token) {
             this.socket.emit('updateToken', token);
           }
         });
-      });
+    });
   }
 
   getSessionList() {
@@ -51,10 +46,5 @@ export class AdminServerApiService {
         resolve(sessionId);
       });
     });
-  }
-
-  onDestroy() {
-    this.unsubscribe$.next(true);
-    this.unsubscribe$.complete();
   }
 }
