@@ -1,25 +1,22 @@
 <md-sidenav-container>
   <md-sidenav mode="side" opened="true" class="example-sidenav">
     <h3>Session List</h3>
-    <ul class="no-style">
-      <li *ngFor="let session of (sessions$ | async); let idx = index;">
-        <md-button-toggle (click)="sessionProblem = session;">
-          {{idx + 1}} {{session?.isTestFinished ? '' : 'In Progress ...'}}
-        </md-button-toggle>
-      </li>
-    </ul>
+
+    <md-button-toggle-group #sessionList="mdButtonToggleGroup">
+      <md-button-toggle [value]="session" *ngFor="let session of (sessions$ | async); let idx = index;">
+        {{idx + 1}} {{session?.isTestFinished ? '' : 'In Progress ...'}}
+      </md-button-toggle>
+    </md-button-toggle-group>
   </md-sidenav>
   <div class="example-sidenav-content">
-    <md-card style="height:100%; width:100%; box-sizing: border-box; margin-left:2px;" 
-    *ngIf="!!sessionProblem">
+    <md-card style="height:100%; width:100%; box-sizing: border-box; margin-left:2px;" *ngIf="!!sessionList.value">
       <md-card-content>
-        <div *ngFor="let problem of sessionProblem?.problems; let idx = index">
-          <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem?.question))
-          style="min-height: 200px;width:30%;float:left;">
+        <div *ngFor="let problem of sessionList.value?.problems; let idx = index">
+          <div [innerHTML]=sanitizer.bypassSecurityTrustHtml(converter.makeHtml(problem?.question)) style="min-height: 200px;width:30%;float:left;">
           </div>
           <ng-container *ngIf="!!sessionProblem?.answers && sessionProblem?.answers.length > 0">
             <ace-editor [autoUpdateContent]="true" [text]="showAnswer(sessionProblem?.answers[idx])" [theme]="'chrome'" [readOnly]="true"
-              style="min-height: 200px;width:70%;">
+              style="min-height: 200px;width:70%;float:left;">
             </ace-editor>
           </ng-container>
         </div>

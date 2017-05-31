@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/takeUntil';
 
 import { AuthService } from '../login/login.services';
@@ -16,7 +16,7 @@ export class AdminServerApiService {
   private url = window.location.origin;
   private socket: any;
 
-  unsubscribe$ = new Subject<any>();
+  unsubscribe$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private authService: AuthService) {
     this.socket = io(this.url, {
@@ -54,7 +54,7 @@ export class AdminServerApiService {
   }
 
   onDestroy() {
-    this.unsubscribe$.next();
+    this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
   }
 }

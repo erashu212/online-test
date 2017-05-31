@@ -9,7 +9,7 @@ const express = require('express');
 
 const app = express();
 
-import * as socketIo from "socket.io";
+import * as socketIo from 'socket.io';
 
 
 const RoutesConfig = require('./config/routes.conf');
@@ -17,7 +17,7 @@ const DBConfig = require('./config/db.conf');
 const ErrorHandler = require('./config/error-handler.conf');
 const Routes = require('./routes/index');
 
-let server = http.createServer(app)
+const server = http.createServer(app)
   .listen(PORT, () => {
     console.log('up and running @: ' + os.hostname() + ' on port: ' + PORT);
     console.log(`enviroment: ${process.env.NODE_ENV || 'Dev'}`);
@@ -37,4 +37,4 @@ process.on('uncaughtException', function (err: any) {
   // handle the error safely
   DBConfig.close();
   console.log(err)
-})
+});
