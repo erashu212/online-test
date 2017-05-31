@@ -26,7 +26,7 @@ export class AdminServerApiService {
 
       this.socket.on('connect', () => {
         this.authService.token$
-        .takeUntil(this.unsubscribe$)
+        // .takeUntil(this.unsubscribe$)
         .subscribe(token => {
           if (token) {
             this.socket.emit('updateToken', token);
